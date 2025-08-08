@@ -4,6 +4,8 @@ import Papa from 'papaparse'
 import { exportAsJSON } from '../utils/exportUtils'
 import { isValidBug } from '../utils/bugUtils'
 
+const API_BASE = import.meta.env.VITE_API_URL
+
 export const useBugLogic = () => {
   const [bugs, setBugs] = useState([])
   const [editMode, setEditMode] = useState(false)
@@ -18,18 +20,17 @@ export const useBugLogic = () => {
 
   const justUploadedRef = useRef(false)
 
-  // ✅ Fetch on mount
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
       try {
-        const res = await fetch('http://localhost:5000/api/bugs')
+        const res = await fetch(`${API_BASE}/bugs`)
         const data = await res.json()
         const sorted = data.sort((a, b) => a.ScenarioID.localeCompare(b.ScenarioID))
         setBugs(sorted)
 
         if (justUploadedRef.current) {
-          justUploadedRef.current = false // reset flag
+          justUploadedRef.current = false
         } else {
           toast.info("🔄 Page refreshed successfully")
         }
@@ -45,7 +46,6 @@ export const useBugLogic = () => {
     fetchData()
   }, [])
 
-  // ✅ Import Handler
   const handleFile = (e) => {
     const file = e.target.files[0]
     const reader = new FileReader()
@@ -58,16 +58,16 @@ export const useBugLogic = () => {
         }
 
         await Promise.all(data.map(bug =>
-          fetch('http://localhost:5000/api/bugs', {
+          fetch(`${API_BASE}/bugs`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(bug)
           })
         ))
 
-        justUploadedRef.current = true // ✅ sets before re-fetching
+        justUploadedRef.current = true
 
-        const res = await fetch('http://localhost:5000/api/bugs')
+        const res = await fetch(`${API_BASE}/bugs`)
         const allBugs = await res.json()
         const sorted = allBugs.sort((a, b) => a.ScenarioID.localeCompare(b.ScenarioID))
         setBugs(sorted)
@@ -106,14 +106,12 @@ export const useBugLogic = () => {
     }
   }
 
-  // ✅ JSON Export
   const exportJSON = () => exportAsJSON(bugs)
 
-  // ✅ Reset all from backend
   const resetAll = () => {
     if (!window.confirm("Are you sure you want to delete ALL bugs?")) return
 
-    fetch('http://localhost:5000/api/bugs/delete-all', { method: 'DELETE' })
+    fetch(`${API_BASE}/bugs/delete-all`, { method: 'DELETE' })
       .then(res => res.json())
       .then(() => {
         setBugs([])
@@ -125,10 +123,9 @@ export const useBugLogic = () => {
       })
   }
 
-  // ✅ Add bug
   const handleAddBug = () => {
     setLoading(true)
-    fetch('http://localhost:5000/api/bugs', {
+    fetch(`${API_BASE}/bugs`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newBug)
@@ -151,10 +148,9 @@ export const useBugLogic = () => {
       .finally(() => setLoading(false))
   }
 
-  // ✅ Delete bug
   const handleDelete = (id) => {
     setLoading(true)
-    fetch(`http://localhost:5000/api/bugs/${id}`, { method: 'DELETE' })
+    fetch(`${API_BASE}/bugs/${id}`, { method: 'DELETE' })
       .then(() => {
         setBugs(prev => prev.filter(bug => bug._id !== id))
         toast.success("🗑️ Bug deleted!")
@@ -166,15 +162,13 @@ export const useBugLogic = () => {
       .finally(() => setLoading(false))
   }
 
-  // ✅ Update bug
   const handleUpdate = (id, updatedFields) => {
-  setBugs(prev =>
-    prev.map(bug =>
-      bug._id === id ? { ...bug, ...updatedFields } : bug
+    setBugs(prev =>
+      prev.map(bug =>
+        bug._id === id ? { ...bug, ...updatedFields } : bug
+      )
     )
-  )
-}
-
+  }
 
   return {
     bugs, editMode, search, loading, showAddForm, newBug,
