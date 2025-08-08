@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 🌌 Cyberpunk background */
+body {
+  @apply bg-[#0d0d1c] text-[#e0e0f0] font-mono;
+  background: linear-gradient(135deg, #050510, #0d0d1c);
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* 🧬 Matrix-style falling glow lines */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    #0ff2 1px,
+    transparent 2px
+  );
+  opacity: 0.03;
+  animation: flicker 4s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.02; }
+  50% { opacity: 0.05; }
+  100% { opacity: 0.02; }
+}
+
+/* 🔷 Neon input glow */
+input, select, textarea {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #00ffff44;
+  color: #e0e0f0;
+  @apply px-3 py-2 rounded;
+  transition: all 0.2s ease-in-out;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #0ff;
+  box-shadow: 0 0 5px #0ff;
+}
+
+/* ✨ Buttons */
+.btn {
+  @apply px-4 py-2 rounded font-semibold transition;
+}
+.btn-glow {
+  background: linear-gradient(45deg, #0ff, #0ff9);
+  color: #0d0d1c;
+  box-shadow: 0 0 8px #0ff;
+}
+.btn-glow:hover {
+  background: #00ffff;
+  transform: scale(1.05);
+}
+
+/* 🎴 Glass cards */
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid #0ff3;
+  border-radius: 12px;
+  padding: 1rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease-in-out;
+}
+.card-hover:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 10px #0ff8;
+}
+/* 🌞 Light Mode Support */
+body.light-mode {
+  background: #f7f7f7;
+  color: #111;
+  font-family: 'Inter', sans-serif;
+}
+
+body.light-mode .glass {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: #ccc;
+  color: #000;
+}
+
+body.light-mode input,
+body.light-mode .btn,
+body.light-mode .btn-danger,
+body.light-mode .btn-primary {
+  color: #000;
+  background-color: #fff !important;
+  border-color: #ccc !important;
+}
+
+body.light-mode .btn:hover {
+  background-color: #f0f0f0 !important;
+}
+
+body.light-mode input:focus,
+body.light-mode textarea:focus {
+  box-shadow: 0 0 0 2px #00bcd4;
+}
