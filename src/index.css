@@ -77,6 +77,7 @@ input:focus, textarea:focus {
   transform: scale(1.02);
   box-shadow: 0 0 10px #0ff8;
 }
+
 /* 🌞 Light Mode Support */
 body.light-mode {
   background: #f7f7f7;
@@ -106,4 +107,27 @@ body.light-mode .btn:hover {
 body.light-mode input:focus,
 body.light-mode textarea:focus {
   box-shadow: 0 0 0 2px #00bcd4;
+}
+
+/* 🌗 Light/Dark Toggle Effects */
+.theme-toggle {
+  transition: transform 0.5s ease, text-shadow 0.5s ease;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.2) rotate(20deg);
+  text-shadow: 0 0 10px #0ff, 0 0 20px #f0f;
+}
+
+.theme-toggle.spin {
+  animation: spinToggle 0.6s ease;
+}
+
+@keyframes spinToggle {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+  to {
+    transform: rotate(360deg) scale(1.2);
+  }
 }
