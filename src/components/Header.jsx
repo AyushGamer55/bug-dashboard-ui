@@ -33,11 +33,21 @@ function Header({
 
       {/* 🎛️ Buttons */}
       <div className="flex flex-wrap justify-center md:justify-end gap-3 mt-2">
+        
+        {/* Accessible file upload */}
+        <label
+          htmlFor="file-upload"
+          className="cursor-pointer file:px-4 file:py-2 file:rounded file:border-0 file:bg-cyan-500 file:text-black hover:file:bg-cyan-400 transition"
+        >
+          Upload File
+        </label>
         <input
+          id="file-upload"
           type="file"
           onChange={onFile}
-          className="btn bg-cyan-500 text-black hover:bg-cyan-400 cursor-pointer"
+          className="hidden"
         />
+
 
         <button
           onClick={toggleEdit}
