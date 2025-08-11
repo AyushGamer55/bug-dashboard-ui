@@ -35,17 +35,17 @@ function Header({
       </button>
 
       {/* 🔥 Logo + Title */}
-      <div className="flex items-center gap-4 flex-wrap text-center md:text-left">
+      <div className="flex flex-wrap items-center gap-4 max-w-full">
         <img
           src={logo}
           alt="Spider Logo"
-          className="h-12 w-auto object-contain drop-shadow-[0_0_10px_#f00] animate-pulse"
+          className="h-16 w-16 object-contain drop-shadow-[0_0_10px_#f00] animate-pulse"
         />
         <div>
-          <h1 className="text-2xl md:text-4xl font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff] animate-pulse">
+          <h1 className="text-3xl md:text-5xl font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff] animate-pulse leading-tight">
             Bug Report Dashboard
           </h1>
-          <p className="text-sm text-purple-300 italic mt-1">
+          <p className="text-base md:text-lg text-purple-300 italic mt-2 max-w-xl">
             Upload, edit, add, delete and export your bug reports efficiently
           </p>
         </div>
