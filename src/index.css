@@ -93,11 +93,10 @@ body.light-mode .glass {
 
 body.light-mode input,
 body.light-mode .btn,
-body.light-mode .btn-danger,
-body.light-mode .btn-primary {
-  color: #000;
-  background-color: #fff !important;
-  border-color: #ccc !important;
+body.light-mode .btn {
+  color: inherit;
+  background-color: inherit;
+  border-color: inherit;
 }
 
 body.light-mode .btn:hover {
