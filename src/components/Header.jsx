@@ -35,14 +35,14 @@ function Header({
       </button>
 
       {/* 🔥 Logo + Title */}
-      <div className="flex items-center gap-4 text-center md:text-left">
+      <div className="flex items-center gap-4 flex-wrap text-center md:text-left">
         <img
           src={logo}
           alt="Spider Logo"
-          className="h-36 w-30 object-contain drop-shadow-[0_0_10px_#f00] animate-pulse"
+          className="h-26 w-auto object-contain drop-shadow-[0_0_10px_#f00] animate-pulse"
         />
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff] animate-pulse">
+          <h1 className="text-2xl md:text-4xl font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff] animate-pulse">
             Bug Report Dashboard
           </h1>
           <p className="text-sm text-purple-300 italic mt-1">
