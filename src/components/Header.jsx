@@ -24,7 +24,7 @@ function Header({
 
       {/* 🔥 Cyberpunk Title */}
       <div className="flex items-center gap-3">
-        <img src="/logo.png" alt="Bug Logo" className="w-10 h-10" />
+        <img src="../assets/logo.png" alt="Bug Logo" className="w-10 h-10" />
       <div className="text-center md:text-left">
         <h1 className="text-3xl md:text-4xl font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff] animate-pulse">
           🧠 Bug Report Dashboard
