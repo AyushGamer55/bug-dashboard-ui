@@ -37,7 +37,7 @@ function Header({
         {/* Accessible file upload */}
         <label
           htmlFor="file-upload"
-          className="file:px-4 file:py-2 file:rounded file:border-0 file:bg-cyan-500 file:text-black hover:file:bg-cyan-400 transition"
+          className="btn bg-cyan-500 text-black hover:bg-cyan-400 cursor-pointer"
         >
           Upload File
         </label>
