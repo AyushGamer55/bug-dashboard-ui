@@ -39,7 +39,7 @@ function Header({
         <img
           src={logo}
           alt="Spider Logo"
-          className="h-26 w-auto object-contain drop-shadow-[0_0_10px_#f00] animate-pulse"
+          className="h-12 w-auto object-contain drop-shadow-[0_0_10px_#f00] animate-pulse"
         />
         <div>
           <h1 className="text-2xl md:text-4xl font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff] animate-pulse">
