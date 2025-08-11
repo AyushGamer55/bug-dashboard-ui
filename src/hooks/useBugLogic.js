@@ -4,7 +4,7 @@ import Papa from 'papaparse'
 import { exportAsJSON } from '../utils/exportUtils'
 import { isValidBug } from '../utils/bugUtils'
 
-const API_BASE = import.meta.env.VITE_API_URL
+const API_BASE = import.meta.env.VITE_API_URL;
 
 export const useBugLogic = () => {
   const [bugs, setBugs] = useState([])
