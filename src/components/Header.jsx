@@ -7,10 +7,15 @@ function Header({
   return (
     <div className="glass relative flex flex-col md:flex-row justify-between items-center gap-4 mb-6 p-6 border border-cyan-400 shadow-lg">
       
-      {/* ☀️ Light/Dark Mode Toggle (TOP RIGHT) */}
+      {/* 🌗 Light/Dark Mode Toggle (TOP RIGHT) */}
       <button
-        onClick={toggleTheme}
-        className="absolute top-3 right-3 text-2xl hover:scale-110 transition z-10"
+        onClick={() => {
+          toggleTheme();
+          const btn = document.querySelector(".theme-toggle");
+          btn.classList.add("spin");
+          setTimeout(() => btn.classList.remove("spin"), 600);
+        }}
+        className="theme-toggle absolute top-3 right-3 text-2xl hover:scale-110 transition z-10"
         title="Toggle Light/Dark Mode"
       >
         {theme === "dark" ? "☀️" : "🌙"}
@@ -28,19 +33,10 @@ function Header({
 
       {/* 🎛️ Buttons */}
       <div className="flex flex-wrap justify-center md:justify-end gap-3 mt-2">
-        
-        {/* Accessible file upload */}
-        <label
-          htmlFor="file-upload"
-          className="btn bg-cyan-500 text-black hover:bg-cyan-400 cursor-pointer"
-        >
-          Upload File
-        </label>
         <input
-          id="file-upload"
           type="file"
           onChange={onFile}
-          className="hidden"
+          className="btn bg-cyan-500 text-black hover:bg-cyan-400 cursor-pointer"
         />
 
         <button
