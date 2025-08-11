@@ -23,16 +23,15 @@ function Header({
       </button>
 
       {/* 🔥 Logo and Title */}
-<div className="flex items-center gap-4 text-center md:text-left">
+<div className="flex items-center gap-3">
   <img
-    src={logo}
-    alt="Bug Logo"
-    className="h-20 w-auto object-contain drop-shadow-[0_0_10px_#0ff] animate pulse"
+    src={logo} // import your logo.png at the top
+    alt="Spider Logo"
+    className="h-10 w-10 object-contain drop-shadow-[0_0_10px_#f00]"
   />
-  <div>
-    <h1 className="text-3xl md:text-4xl font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff] animate-pulse">
-      🪲 Bug Report Dashboard
-    </h1>
+  <h1 className="text-3xl md:text-4xl font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff] animate-pulse">
+    Bug Report Dashboard
+  </h1>
     <p className="text-sm text-purple-300 italic">
       Upload, edit, add, delete and export your bug reports efficiently
     </p>
