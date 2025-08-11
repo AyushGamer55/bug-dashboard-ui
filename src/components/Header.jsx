@@ -24,7 +24,7 @@ function Header({
 
       {/* 🔥 Logo and Title */}
       <div className="flex flex-col items-center md:items-start text-center md:text-left">
-        <img src={logo} alt="Bug Logo" className="max-h-12 w-auto object-contain drop-shadow-[0_0_10px_#0ff]" />
+        <img src={logo} alt="Bug Logo" className="max-h-20 w-auto object-contain drop-shadow-[0_0_10px_#0ff]" />
         <h1 className="text-3xl md:text-4xl font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff] animate-pulse">
           🧠 Bug Report Dashboard
         </h1>
