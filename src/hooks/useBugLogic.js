@@ -163,7 +163,6 @@ export const useBugLogic = () => {
   }
 
   const handleUpdate = async (id, updatedFields) => {
-  // Optimistic update
   const previousBugs = [...bugs];
   setBugs(prev =>
     prev.map(bug => bug._id === id ? { ...bug, ...updatedFields } : bug)
@@ -176,7 +175,10 @@ export const useBugLogic = () => {
       body: JSON.stringify(updatedFields)
     });
 
-    if (!res.ok) throw new Error("Failed to update bug");
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Failed to update bug: ${res.status} ${res.statusText} - ${errorText}`);
+    }
 
     const updatedBug = await res.json();
     setBugs(prev =>
@@ -186,7 +188,7 @@ export const useBugLogic = () => {
 
   } catch (err) {
     console.error("Update failed:", err);
-    toast.error("❌ Update failed, reverting changes");
+    toast.error(`❌ Update failed: ${err.message}`);
     setBugs(previousBugs); 
   }
 };
