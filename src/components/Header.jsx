@@ -35,7 +35,7 @@ function Header({
       </button>
 
       {/* 🔥 Logo + Title */}
-      <div className="flex items-center gap-4 text-center md:text-left">
+      <div className="flex items-center gap-4 flex-wrap text-center md:text-left">
         <img
           src={logo}
           alt="Spider Logo"
