@@ -6,49 +6,39 @@ function Header({
 }) {
   return (
     <div className="glass relative flex flex-col md:flex-row justify-between items-center gap-4 mb-6 p-6 border border-cyan-400 shadow-lg">
-      
-      {/* 🌗 Light/Dark Mode Toggle (TOP RIGHT) */}
+
+      {/* ☀️ Light/Dark Mode Toggle (TOP RIGHT) */}
       <button
-        onClick={() => {
-          toggleTheme();
-          const btn = document.querySelector(".theme-toggle");
-          btn.classList.add("spin");
-          setTimeout(() => btn.classList.remove("spin"), 600);
-        }}
-        className="theme-toggle absolute top-3 right-3 text-2xl hover:scale-110 transition z-10"
+        onClick={toggleTheme}
+        className="absolute top-3 right-3 text-2xl hover:scale-110 transition z-10"
         title="Toggle Light/Dark Mode"
       >
         {theme === "dark" ? "☀️" : "🌙"}
       </button>
 
-      {/* Logo + Title */}
-      <div className="flex items-center gap-3 text-center md:text-left">
-        <img src="/logo.png" alt="Bug Logo" className="w-10 h-10 drop-shadow-[0_0_6px_#0ff]" />
+      {/* 🔥 Logo + Title */}
+      <div className="flex flex-col md:flex-row items-center gap-3 text-center md:text-left">
+        <img
+          src="/logo.png"
+          alt="Bug Dashboard Logo"
+          className="w-12 h-12 object-contain drop-shadow-[0_0_6px_#0ff]"
+        />
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff] animate-pulse">
-            🧠 Bug Report Dashboard
+          <h1 className="text-3xl md:text-4xl font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff]">
+            Bug Report Dashboard
           </h1>
           <p className="text-sm text-purple-300 italic">
-            Upload, edit, add, delete and export your bug reports efficiently
+            Upload, edit, delete, and export your bug reports efficiently
           </p>
         </div>
       </div>
 
       {/* 🎛️ Buttons */}
       <div className="flex flex-wrap justify-center md:justify-end gap-3 mt-2">
-        
-        {/* Accessible file upload */}
-        <label
-          htmlFor="file-upload"
-          className="btn bg-cyan-500 text-black hover:bg-cyan-400 cursor-pointer"
-        >
-          Upload File
-        </label>
         <input
-          id="file-upload"
           type="file"
           onChange={onFile}
-          className="hidden"
+          className="file:px-4 file:py-2 file:rounded file:border-0 file:bg-cyan-500 file:text-black hover:file:bg-cyan-400 transition cursor-pointer"
         />
 
         <button
@@ -93,3 +83,4 @@ function Header({
 }
 
 export default Header
+
