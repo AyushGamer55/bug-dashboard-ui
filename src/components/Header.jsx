@@ -1,5 +1,5 @@
-import React from 'react
-import logo from '../assets/logo.png'; 
+import React from 'react';
+import logo from '../assets/logo.png';
 
 function Header({
   onFile, toggleEdit, exportJSON, resetAll, toggleAddForm,
@@ -22,10 +22,9 @@ function Header({
         {theme === "dark" ? "☀️" : "🌙"}
       </button>
 
-      {/* 🔥 Cyberpunk Title */}
-      <div className="flex items-center gap-3">
-        <img src="../assets/logo.png" alt="Bug Logo" className="w-10 h-10" />
-      <div className="text-center md:text-left">
+      {/* 🔥 Logo and Title */}
+      <div className="flex flex-col items-center md:items-start text-center md:text-left">
+        <img src={logo} alt="Bug Logo" className="w-16 h-16 mb-2" />
         <h1 className="text-3xl md:text-4xl font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff] animate-pulse">
           🧠 Bug Report Dashboard
         </h1>
@@ -50,7 +49,6 @@ function Header({
           onChange={onFile}
           className="hidden"
         />
-
 
         <button
           onClick={toggleEdit}
@@ -90,7 +88,7 @@ function Header({
         className="w-full md:w-1/2 mt-4 md:mt-0 px-4 py-2 bg-[#1c1c2a] text-cyan-200 border border-cyan-400 rounded shadow focus:outline-none focus:ring-2 focus:ring-cyan-500"
       />
     </div>
-  )
+  );
 }
 
-export default Header
+export default Header;
