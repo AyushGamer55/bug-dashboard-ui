@@ -21,17 +21,16 @@ function Header({
         {theme === "dark" ? "☀️" : "🌙"}
       </button>
 
-      {/* Logo + Title */}
-      <div className="flex items-center gap-3 text-center md:text-left">
-        <img src="/logo.png" alt="Bug Logo" className="w-10 h-10 drop-shadow-[0_0_6px_#0ff]" />
-        <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff] animate-pulse">
-            🧠 Bug Report Dashboard
-          </h1>
-          <p className="text-sm text-purple-300 italic">
-            Upload, edit, add, delete and export your bug reports efficiently
-          </p>
-        </div>
+      {/* 🔥 Cyberpunk Title */}
+      <div className="flex items-center gap-3">
+        <img src="/logo.png" alt="Bug Logo" className="w-10 h-10" />
+      <div className="text-center md:text-left">
+        <h1 className="text-3xl md:text-4xl font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff] animate-pulse">
+          🧠 Bug Report Dashboard
+        </h1>
+        <p className="text-sm text-purple-300 italic">
+          Upload, edit, add, delete and export your bug reports efficiently
+        </p>
       </div>
 
       {/* 🎛️ Buttons */}
@@ -50,6 +49,7 @@ function Header({
           onChange={onFile}
           className="hidden"
         />
+
 
         <button
           onClick={toggleEdit}
