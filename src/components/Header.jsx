@@ -14,20 +14,35 @@ function Header({
   theme
 }) {
   return (
-    <header className="glass border border-cyan-400 shadow-lg p-6 flex flex-col gap-4">
+    <header className="glass relative flex flex-col md:flex-row justify-between items-center gap-4 mb-6 p-6 border border-cyan-400 shadow-lg">
       
-      {/* Row 1: Logo + Title */}
-      <div className="flex items-center gap-6">
-        {/* Logo */}
+      {/* 🌗 Light/Dark Mode Toggle (TOP RIGHT) */}
+      <button
+        type="button"
+        onClick={() => {
+          toggleTheme()
+          const btn = document.querySelector('.theme-toggle')
+          if (btn) {
+            btn.classList.add('spin')
+            setTimeout(() => btn.classList.remove('spin'), 600)
+          }
+        }}
+        className="theme-toggle absolute top-3 right-3 text-2xl hover:scale-110 transition z-10"
+        aria-label="Toggle Light/Dark Mode"
+        title="Toggle Light/Dark Mode"
+      >
+        {theme === 'dark' ? '☀️' : '🌙'}
+      </button>
+
+      {/* 🔥 Logo + Title */}
+      <div className="flex items-center gap-4 text-center md:text-left">
         <img
           src={logo}
           alt="Spider Logo"
-          className="h-20 w-20 object-contain drop-shadow-[0_0_15px_#f00]"
+          className="h-20 w-auto object-contain drop-shadow-[0_0_10px_#f00]"
         />
-
-        {/* Title + Subtitle */}
         <div>
-          <h1 className="text-4xl font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff]">
+          <h1 className="text-3xl md:text-4xl font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff]">
             Bug Report Dashboard
           </h1>
           <p className="text-sm text-purple-300 italic mt-1">
@@ -36,11 +51,10 @@ function Header({
         </div>
       </div>
 
-      {/* Row 2: Buttons + Search */}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-3">
-        
-        {/* Buttons */}
-        <div className="flex flex-wrap gap-3">
+      {/* 🎛️ Controls + Search */}
+      <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Accessible file upload */}
           <label
             htmlFor="file-upload"
             className="btn bg-cyan-500 text-black hover:bg-cyan-400 cursor-pointer"
@@ -87,32 +101,14 @@ function Header({
           </button>
         </div>
 
-        {/* Search + Theme Toggle */}
-        <div className="flex items-center gap-3">
-          <input
-            type="text"
-            placeholder="🔎 Search bugs..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="px-4 py-2 bg-[#1c1c2a] text-cyan-200 border border-cyan-400 rounded shadow focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          />
-
-          <button
-            type="button"
-            onClick={() => {
-              toggleTheme()
-              const btn = document.querySelector('.theme-toggle')
-              if (btn) {
-                btn.classList.add('spin')
-                setTimeout(() => btn.classList.remove('spin'), 600)
-              }
-            }}
-            className="theme-toggle text-2xl hover:scale-110 transition"
-            aria-label="Toggle Light/Dark Mode"
-          >
-            {theme === 'dark' ? '☀️' : '🌙'}
-          </button>
-        </div>
+        {/* 🔍 Search Field */}
+        <input
+          type="text"
+          placeholder="🔎 Search bugs..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full md:w-64 mt-3 md:mt-0 px-4 py-2 bg-[#1c1c2a] text-cyan-200 border border-cyan-400 rounded shadow focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        />
       </div>
     </header>
   )
