@@ -162,13 +162,34 @@ export const useBugLogic = () => {
       .finally(() => setLoading(false))
   }
 
-  const handleUpdate = (id, updatedFields) => {
+  const handleUpdate = async (id, updatedFields) => {
+  // Optimistic update
+  const previousBugs = [...bugs];
+  setBugs(prev =>
+    prev.map(bug => bug._id === id ? { ...bug, ...updatedFields } : bug)
+  );
+
+  try {
+    const res = await fetch(`${API_BASE}/bugs/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedFields)
+    });
+
+    if (!res.ok) throw new Error("Failed to update bug");
+
+    const updatedBug = await res.json();
     setBugs(prev =>
-      prev.map(bug =>
-        bug._id === id ? { ...bug, ...updatedFields } : bug
-      )
-    )
+      prev.map(bug => bug._id === id ? updatedBug : bug)
+    );
+    toast.success("✅ Bug updated successfully!");
+
+  } catch (err) {
+    console.error("Update failed:", err);
+    toast.error("❌ Update failed, reverting changes");
+    setBugs(previousBugs); 
   }
+};
 
   return {
     bugs, editMode, search, loading, showAddForm, newBug,
