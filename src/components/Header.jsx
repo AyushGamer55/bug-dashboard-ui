@@ -25,7 +25,7 @@ function Header({
       {/* 🔥 Logo and Title */}
 <div className="flex items-center gap-3">
   <img
-    src={logo} // import your logo.png at the top
+    src={logo} 
     alt="Spider Logo"
     className="h-10 w-10 object-contain drop-shadow-[0_0_10px_#f00]"
   />
