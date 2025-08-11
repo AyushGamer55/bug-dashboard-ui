@@ -35,10 +35,10 @@ function Header({
         <img
           src={logo}
           alt="Spider Logo"
-          className="h-32 sm:h-20 w-auto object-contain drop-shadow-[0_0_10px_#f00] animate-pulse"
+          className="h-32 sm:h-28 w-auto object-contain drop-shadow-[0_0_10px_#f00] animate-pulse"
         />
         <div>
-          <h1 className="text-4xl md:5x1 sm:text-5x1 font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff] animate-pulse">
+          <h1 className="text-5xl md:6x1 sm:text-5x1 font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff] animate-pulse">
             Bug Report Dashboard
           </h1>
           <p className="text-sm text-purple-300 italic">
