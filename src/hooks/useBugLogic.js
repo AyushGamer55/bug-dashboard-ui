@@ -124,29 +124,17 @@ export const useBugLogic = () => {
   }
 
   const handleAddBug = () => {
-  // Check if at least one field is filled
-  const hasData = Object.values(newBug).some(val => val.trim() !== '')
-  if (!hasData) {
-    setShowHint(true)
-    return
-  }
-
-  setShowHint(false)
   setLoading(true)
-
   fetch(`${API_BASE}/bugs`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(newBug)
   })
-    .then(async (res) => {
-      if (!res.ok) {
-        const errorText = await res.text()
-        throw new Error(errorText || 'Failed to add bug')
-      }
+    .then(res => {
+      if (!res.ok) throw new Error("Network response was not ok")
       return res.json()
     })
-    .then((addedBug) => {
+    .then(addedBug => {
       setBugs(prev => [...prev, addedBug])
       setNewBug({
         ScenarioID: '', TestCaseID: '', Description: '', Status: '', Priority: '',
@@ -156,7 +144,7 @@ export const useBugLogic = () => {
       setShowAddForm(false)
       toast.success("✅ Bug added successfully!")
     })
-    .catch((err) => {
+    .catch(err => {
       console.error("Failed to add bug:", err)
       toast.error("❌ Failed to add bug")
     })
