@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import { useBugLogic } from './hooks/useBugLogic'
-import Header from './components/Header'
-import AddBugForm from './components/AddBugForm'
-import BugList from './components/BugList'
-import VideoIntro from './components/VideoIntro' 
+import React, { useState } from "react";
+import { useBugLogic } from "./hooks/useBugLogic";
+import Header from "./components/Header";
+import AddBugForm from "./components/AddBugForm";
+import BugList from "./components/BugList";
+import VideoIntro from "./components/VideoIntro"; 
 
 function App() {
   const {
@@ -11,31 +11,26 @@ function App() {
     setSearch, setEditMode, setShowAddForm, setNewBug,
     handleFile, handleAddBug, resetAll, exportJSON,
     handleDelete, handleUpdate
-  } = useBugLogic()
+  } = useBugLogic();
 
-  const [theme, setTheme] = useState("dark")
-  const [showIntro, setShowIntro] = useState(true) // 
-
-  useEffect(() => {
-    document.body.className = theme === "light" ? "light-mode" : ""
-  }, [theme])
+  const [theme, setTheme] = useState("dark");
+  const [introDone, setIntroDone] = useState(false);
 
   const toggleTheme = () => {
-    setTheme(prev => (prev === "dark" ? "light" : "dark"))
-  }
+    setTheme(prev => (prev === "dark" ? "light" : "dark"));
+  };
 
   const filteredBugs = bugs.filter(bug => {
-    const query = search.trim().toLowerCase()
+    const query = search.trim().toLowerCase();
     return Object.values(bug).some(value =>
-      (value || '').toString().toLowerCase().includes(query)
-    )
-  })
+      (value || "").toString().toLowerCase().includes(query)
+    );
+  });
 
   return (
     <>
-      {showIntro ? (
-        <VideoIntro onFinish={() => setShowIntro(false)} />
-      ) : (
+      {!introDone && <VideoIntro onFinish={() => setIntroDone(true)} />}
+      {introDone && (
         <div className="p-6">
           <Header
             onFile={handleFile}
@@ -73,7 +68,7 @@ function App() {
         </div>
       )}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
