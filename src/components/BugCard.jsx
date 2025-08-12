@@ -28,7 +28,6 @@ function BugCard({ bug, editMode, onDelete, onUpdate }) {
             })
               .then(res => res.json())
               .then(() => {
-                toast.success(`✅ ${key} updated!`)
                 onUpdate?.({ [key]: newValue })
               })
               .catch(() => {
