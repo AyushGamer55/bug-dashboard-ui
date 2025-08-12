@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useBugLogic } from './hooks/useBugLogic';
 import Header from './components/Header';
 import AddBugForm from './components/AddBugForm';
@@ -14,16 +14,10 @@ function App() {
   } = useBugLogic();
 
   const [theme, setTheme] = useState("dark");
-  const [showIntro, setShowIntro] = useState(false);
+  const [introFinished, setIntroFinished] = useState(false); 
 
-  useEffect(() => {
+  React.useEffect(() => {
     document.body.className = theme === "light" ? "light-mode" : "";
-
-    const hasSeenIntro = sessionStorage.getItem("hasSeenIntro");
-    if (!hasSeenIntro) {
-      setShowIntro(true);
-      sessionStorage.setItem("hasSeenIntro", "true");
-    }
   }, [theme]);
 
   const toggleTheme = () => {
@@ -37,48 +31,47 @@ function App() {
     );
   });
 
+  // ✅ Show intro first, dashboard after
+  if (!introFinished) {
+    return <VideoIntro onFinish={() => setIntroFinished(true)} />;
+  }
+
   return (
-    <>
-      {showIntro ? (
-        <VideoIntro onFinish={() => setShowIntro(false)} />
-      ) : (
-        <div className="p-6">
-          <Header
-            onFile={handleFile}
-            toggleEdit={() => setEditMode(!editMode)}
-            exportJSON={exportJSON}
-            resetAll={resetAll}
-            toggleAddForm={() => setShowAddForm(!showAddForm)}
-            editMode={editMode}
-            search={search}
-            setSearch={setSearch}
-            toggleTheme={toggleTheme}
-            theme={theme}
-          />
+    <div className="p-6">
+      <Header
+        onFile={handleFile}
+        toggleEdit={() => setEditMode(!editMode)}
+        exportJSON={exportJSON}
+        resetAll={resetAll}
+        toggleAddForm={() => setShowAddForm(!showAddForm)}
+        editMode={editMode}
+        search={search}
+        setSearch={setSearch}
+        toggleTheme={toggleTheme}
+        theme={theme}
+      />
 
-          {loading && (
-            <div className="text-center text-blue-600 font-semibold animate-pulse mt-2">
-              Loading...
-            </div>
-          )}
-
-          {showAddForm && (
-            <AddBugForm
-              newBug={newBug}
-              setNewBug={setNewBug}
-              handleAddBug={handleAddBug}
-            />
-          )}
-
-          <BugList
-            bugs={filteredBugs}
-            editMode={editMode}
-            handleDelete={handleDelete}
-            handleUpdate={handleUpdate}
-          />
+      {loading && (
+        <div className="text-center text-blue-600 font-semibold animate-pulse mt-2">
+          Loading...
         </div>
       )}
-    </>
+
+      {showAddForm && (
+        <AddBugForm
+          newBug={newBug}
+          setNewBug={setNewBug}
+          handleAddBug={handleAddBug}
+        />
+      )}
+
+      <BugList
+        bugs={filteredBugs}
+        editMode={editMode}
+        handleDelete={handleDelete}
+        handleUpdate={handleUpdate}
+      />
+    </div>
   );
 }
 
