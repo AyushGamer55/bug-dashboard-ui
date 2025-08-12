@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import introVideo from "../assets/intro.mp4";
+import introVideo from "../assets/intro.webm";
 
 export default function VideoIntro({ onFinish }) {
   const videoRef = useRef(null);
@@ -57,3 +57,4 @@ export default function VideoIntro({ onFinish }) {
     </div>
   );
 }
+
