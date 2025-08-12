@@ -4,8 +4,6 @@ function AddBugForm({ newBug, setNewBug, handleAddBug, showHint }) {
   return (
     <div className="bg-black shadow-md p-4 mt-4 rounded border border-blue-300">
       <h2 className="text-lg font-semibold mb-2 text-blue-600">➕ Add New Scenario</h2>
-
-      {/* Input fields */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
         {Object.keys(newBug).map((key) => (
           <input
@@ -14,23 +12,16 @@ function AddBugForm({ newBug, setNewBug, handleAddBug, showHint }) {
             placeholder={key}
             value={newBug[key]}
             onChange={(e) => setNewBug({ ...newBug, [key]: e.target.value })}
-            className="p-2 rounded bg-transparent border border-cyan-500 text-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+            className="p-2 rounded bg-transparent border border-cyan-500 text-white text-sm"
           />
         ))}
       </div>
-
-      {/* Add button */}
-      <button
-        onClick={handleAddBug}
-        className="mt-3 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500 transition"
-      >
+      <button onClick={handleAddBug} className="mt-3 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500">
         Add Bug
       </button>
-
-      {/* Hint message */}
       {showHint && (
-        <p className="text-yellow-400 text-sm mt-2">
-          ⚠️ Please fill at least <span className="font-semibold">one</span> field before saving.
+        <p className="text-yellow-400 text-sm mt-1">
+          Please fill at least <span className="font-semibold">one</span> field before saving.
         </p>
       )}
     </div>
