@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 
+const API_BASE = import.meta.env.VITE_API_URL;
+
 function BugCard({ bug, editMode, onDelete, onUpdate }) {
   const [savingField, setSavingField] = useState(null)
 
