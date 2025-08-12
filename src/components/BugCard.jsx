@@ -19,7 +19,7 @@ function BugCard({ bug, editMode, onDelete, onUpdate }) {
           const newValue = e.target.innerText.trim()
           if (newValue !== value) {
             setSavingField(key)
-            fetch(`http://localhost:5000/api/bugs/${bug._id}`, {
+            fetch((`${API_BASE}/bugs/${id}`, {
               method: 'PATCH',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ [key]: newValue })
