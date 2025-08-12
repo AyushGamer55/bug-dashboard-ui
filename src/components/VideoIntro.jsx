@@ -1,40 +1,48 @@
-import React, { useEffect, useState } from "react";
+// src/components/VideoIntro.jsx
+import React, { useEffect, useRef } from "react";
 import introVideo from "../assets/intro.mp4";
 
 const VideoIntro = ({ onFinish }) => {
-  const [show, setShow] = useState(true);
+  const videoRef = useRef(null);
 
   useEffect(() => {
-    // If intro already played this session, skip it
-    if (sessionStorage.getItem("seenIntro") === "true") {
-      setShow(false);
-      onFinish();
-    }
-  }, [onFinish]);
+    const videoElement = videoRef.current;
 
-  const handleEndOrSkip = () => {
-    sessionStorage.setItem("seenIntro", "true");
-    setShow(false);
+    if (videoElement) {
+      // Try to autoplay
+      const playPromise = videoElement.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          console.warn("Autoplay prevented:", error);
+        });
+      }
+
+      // Listen for video end
+      videoElement.addEventListener("ended", handleFinish);
+    }
+
+    return () => {
+      if (videoElement) {
+        videoElement.removeEventListener("ended", handleFinish);
+      }
+    };
+  }, []);
+
+  const handleFinish = () => {
     onFinish();
   };
 
-  if (!show) return null;
-
   return (
-    <div
-      className="fixed inset-0 bg-black z-50 flex items-center justify-center cursor-pointer"
-      onClick={handleEndOrSkip} // click anywhere to skip
-    >
+    <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
       <video
+        ref={videoRef}
         src={introVideo}
         autoPlay
-        muted={false} // set to true if you want it silent
-        onEnded={handleEndOrSkip}
+        playsInline
+        unmuted
+        controls={false}
         className="w-full h-full object-cover"
       />
-      <div className="absolute bottom-5 text-white text-sm opacity-70">
-        Click to skip
-      </div>
     </div>
   );
 };
