@@ -1,6 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-function AddBugForm({ newBug, setNewBug, handleAddBug, showHint }) {
+function AddBugForm({ newBug, setNewBug, handleAddBug }) {
+  const [showHint, setShowHint] = useState(false)
+
+  const handleClick = () => {
+    const hasValue = Object.values(newBug).some(v => v && v.trim() !== "")
+    if (!hasValue) {
+      setShowHint(true)
+      return
+    }
+    setShowHint(false)
+    handleAddBug()
+  }
+
   return (
     <div className="bg-black shadow-md p-4 mt-4 rounded border border-blue-300">
       <h2 className="text-lg font-semibold mb-2 text-blue-600">➕ Add New Scenario</h2>
@@ -16,7 +28,10 @@ function AddBugForm({ newBug, setNewBug, handleAddBug, showHint }) {
           />
         ))}
       </div>
-      <button onClick={handleAddBug} className="mt-3 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500">
+      <button
+        onClick={handleClick}
+        className="mt-3 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500"
+      >
         Add Bug
       </button>
       {showHint && (
