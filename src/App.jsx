@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { useBugLogic } from "./hooks/useBugLogic";
-import Header from "./components/Header";
-import AddBugForm from "./components/AddBugForm";
-import BugList from "./components/BugList";
-import VideoIntro from "./components/VideoIntro"; 
+import React, { useState, useEffect } from 'react';
+import { useBugLogic } from './hooks/useBugLogic';
+import Header from './components/Header';
+import AddBugForm from './components/AddBugForm';
+import BugList from './components/BugList';
+import VideoIntro from './components/VideoIntro';
 
 function App() {
   const {
@@ -14,7 +14,17 @@ function App() {
   } = useBugLogic();
 
   const [theme, setTheme] = useState("dark");
-  const [introDone, setIntroDone] = useState(false);
+  const [showIntro, setShowIntro] = useState(false);
+
+  useEffect(() => {
+    document.body.className = theme === "light" ? "light-mode" : "";
+
+    const hasSeenIntro = sessionStorage.getItem("hasSeenIntro");
+    if (!hasSeenIntro) {
+      setShowIntro(true);
+      sessionStorage.setItem("hasSeenIntro", "true");
+    }
+  }, [theme]);
 
   const toggleTheme = () => {
     setTheme(prev => (prev === "dark" ? "light" : "dark"));
@@ -23,14 +33,15 @@ function App() {
   const filteredBugs = bugs.filter(bug => {
     const query = search.trim().toLowerCase();
     return Object.values(bug).some(value =>
-      (value || "").toString().toLowerCase().includes(query)
+      (value || '').toString().toLowerCase().includes(query)
     );
   });
 
   return (
     <>
-      {!introDone && <VideoIntro onFinish={() => setIntroDone(true)} />}
-      {introDone && (
+      {showIntro ? (
+        <VideoIntro onFinish={() => setShowIntro(false)} />
+      ) : (
         <div className="p-6">
           <Header
             onFile={handleFile}
