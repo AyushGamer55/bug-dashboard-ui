@@ -124,29 +124,35 @@ export const useBugLogic = () => {
   }
 
   const handleAddBug = () => {
-    setLoading(true)
-    fetch(`${API_BASE}/bugs`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newBug)
-    })
-      .then(res => res.json())
-      .then(addedBug => {
-        setBugs(prev => [...prev, addedBug])
-        setNewBug({
-          ScenarioID: '', TestCaseID: '', Description: '', Status: '', Priority: '',
-          Severity: '', PreCondition: '', StepsToExecute: '', ExpectedResult: '',
-          ActualResult: '', Comments: '', SuggestionToFix: ''
-        })
-        setShowAddForm(false)
-        toast.success("✅ Bug added successfully!")
-      })
-      .catch(err => {
-        console.error("Failed to add bug:", err)
-        toast.error("❌ Failed to add bug")
-      })
-      .finally(() => setLoading(false))
+  if (!isValidBug(newBug)) {
+    toast.warn("⚠️ Please fill at least one field before adding a bug")
+    setShowHint(true) // Optional: show inline hint in UI
+    return
   }
+  setLoading(true)
+  fetch(`${API_BASE}/bugs`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(newBug)
+  })
+    .then(res => res.json())
+    .then(addedBug => {
+      setBugs(prev => [...prev, addedBug])
+      setNewBug({
+        ScenarioID: '', TestCaseID: '', Description: '', Status: '', Priority: '',
+        Severity: '', PreCondition: '', StepsToExecute: '', ExpectedResult: '',
+        ActualResult: '', Comments: '', SuggestionToFix: ''
+      })
+      setShowAddForm(false)
+      setShowHint(false) // Hide hint after successful add
+      toast.success("✅ Bug added successfully!")
+    })
+    .catch(err => {
+      console.error("Failed to add bug:", err)
+      toast.error("❌ Failed to add bug")
+    })
+    .finally(() => setLoading(false))
+}
 
   const handleDelete = (id) => {
     setLoading(true)
