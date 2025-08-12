@@ -18,6 +18,11 @@ function AddBugForm({ newBug, setNewBug, handleAddBug }) {
       </div>
       <button onClick={handleAddBug} className="mt-3 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500">
         Add Bug
+        {showHint && (
+  <p className="text-yellow-400 text-sm mt-1">
+    Please fill at least <span className="font-semibold">one</span> field before saving.
+  </p>
+)}
       </button>
     </div>
   )
