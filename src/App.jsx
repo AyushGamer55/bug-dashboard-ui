@@ -3,6 +3,7 @@ import { useBugLogic } from './hooks/useBugLogic'
 import Header from './components/Header'
 import AddBugForm from './components/AddBugForm'
 import BugList from './components/BugList'
+import VideoIntro from './components/VideoIntro' 
 
 function App() {
   const {
@@ -13,6 +14,7 @@ function App() {
   } = useBugLogic()
 
   const [theme, setTheme] = useState("dark")
+  const [showIntro, setShowIntro] = useState(true) // 
 
   useEffect(() => {
     document.body.className = theme === "light" ? "light-mode" : ""
@@ -30,41 +32,47 @@ function App() {
   })
 
   return (
-    <div className="p-6">
-      <Header
-        onFile={handleFile}
-        toggleEdit={() => setEditMode(!editMode)}
-        exportJSON={exportJSON}
-        resetAll={resetAll}
-        toggleAddForm={() => setShowAddForm(!showAddForm)}
-        editMode={editMode}
-        search={search}
-        setSearch={setSearch}
-        toggleTheme={toggleTheme}
-        theme={theme}
-      />
+    <>
+      {showIntro ? (
+        <VideoIntro onFinish={() => setShowIntro(false)} />
+      ) : (
+        <div className="p-6">
+          <Header
+            onFile={handleFile}
+            toggleEdit={() => setEditMode(!editMode)}
+            exportJSON={exportJSON}
+            resetAll={resetAll}
+            toggleAddForm={() => setShowAddForm(!showAddForm)}
+            editMode={editMode}
+            search={search}
+            setSearch={setSearch}
+            toggleTheme={toggleTheme}
+            theme={theme}
+          />
 
-      {loading && (
-        <div className="text-center text-blue-600 font-semibold animate-pulse mt-2">
-          Loading...
+          {loading && (
+            <div className="text-center text-blue-600 font-semibold animate-pulse mt-2">
+              Loading...
+            </div>
+          )}
+
+          {showAddForm && (
+            <AddBugForm
+              newBug={newBug}
+              setNewBug={setNewBug}
+              handleAddBug={handleAddBug}
+            />
+          )}
+
+          <BugList
+            bugs={filteredBugs}
+            editMode={editMode}
+            handleDelete={handleDelete}
+            handleUpdate={handleUpdate}
+          />
         </div>
       )}
-
-      {showAddForm && (
-        <AddBugForm
-          newBug={newBug}
-          setNewBug={setNewBug}
-          handleAddBug={handleAddBug}
-        />
-      )}
-
-      <BugList
-        bugs={filteredBugs}
-        editMode={editMode}
-        handleDelete={handleDelete}
-        handleUpdate={handleUpdate}
-      />
-    </div>
+    </>
   )
 }
 
