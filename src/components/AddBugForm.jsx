@@ -2,7 +2,7 @@ import React from 'react'
 
 function AddBugForm({ newBug, setNewBug, handleAddBug }) {
   return (
-    <div className="bg-white shadow-md p-4 mt-4 rounded border border-blue-300">
+    <div className="bg-black shadow-md p-4 mt-4 rounded border border-blue-300">
       <h2 className="text-lg font-semibold mb-2 text-blue-600">➕ Add New Scenario</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
         {Object.keys(newBug).map((key) => (
