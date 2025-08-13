@@ -1,9 +1,11 @@
+// src/App.jsx
 import React, { useState, useEffect } from "react";
 import { useBugLogic } from "./hooks/useBugLogic";
 import Header from "./components/Header";
 import AddBugForm from "./components/AddBugForm";
 import BugList from "./components/BugList";
 import VideoIntro from "./components/VideoIntro";
+import SummaryModal from "./components/SummaryModal";
 
 function App() {
   const {
@@ -31,7 +33,7 @@ function App() {
   // Summary modal states
   const [showSummary, setShowSummary] = useState(false);
   const [summaryData, setSummaryData] = useState(null);
-  const [showGraph, setShowGraph] = useState(false);
+  const [summaryMode, setSummaryMode] = useState("text");
 
   useEffect(() => {
     document.body.className = theme === "light" ? "light-mode" : "";
@@ -71,6 +73,7 @@ function App() {
       if (!res.ok) throw new Error("Failed to fetch summary");
       const data = await res.json();
       setSummaryData(data);
+      setSummaryMode("text");
       setShowSummary(true);
     } catch (err) {
       console.error(err);
@@ -95,7 +98,7 @@ function App() {
             setSearch={setSearch}
             toggleTheme={toggleTheme}
             theme={theme}
-            onOpenSummary={handleOpenSummary} // 🔥 new prop
+            onOpenSummary={handleOpenSummary} // Pass summary trigger
           />
 
           {loading && (
@@ -119,51 +122,14 @@ function App() {
             handleUpdate={handleUpdate}
           />
 
-          {/* 🔥 Summary Modal */}
-          {showSummary && summaryData && (
-            <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-              <div className="bg-[#111] text-cyan-300 p-6 rounded-lg shadow-xl max-w-3xl w-full relative border border-cyan-400">
-                <button
-                  className="absolute top-2 right-2 text-red-500 hover:text-red-300"
-                  onClick={() => setShowSummary(false)}
-                >
-                  ✖
-                </button>
-                <h2 className="text-2xl font-bold mb-4">
-                  Bug Summary Report
-                </h2>
-
-                {!showGraph ? (
-                  <div className="space-y-2">
-                    <p>Total Bugs: {summaryData.total}</p>
-                    <p>Open Bugs: {summaryData.open}</p>
-                    <p>Closed Bugs: {summaryData.closed}</p>
-                    <p>By Priority: {JSON.stringify(summaryData.priority)}</p>
-                  </div>
-                ) : (
-                  <div>
-                    {/* You can replace this with chart library later */}
-                    <p>[Graphical View Placeholder]</p>
-                  </div>
-                )}
-
-                <div className="mt-4 flex justify-between">
-                  <button
-                    onClick={() => setShowGraph(!showGraph)}
-                    className="btn bg-purple-600 hover:bg-purple-500 text-white"
-                  >
-                    {showGraph ? "Show Text Summary" : "Show Graph"}
-                  </button>
-                  <button
-                    onClick={() => setShowSummary(false)}
-                    className="btn bg-red-600 hover:bg-red-500 text-white"
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Summary Modal */}
+          <SummaryModal
+            open={showSummary}
+            onClose={() => setShowSummary(false)}
+            summary={summaryData}
+            mode={summaryMode}
+            setMode={setSummaryMode}
+          />
         </>
       )}
     </div>
