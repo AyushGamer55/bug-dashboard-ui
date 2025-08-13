@@ -1,27 +1,16 @@
 import React, { useMemo, useRef, useEffect } from 'react';
-import { Bar, Pie, Line } from 'react-chartjs-2';
+import { Bar, Pie } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   BarElement,
   ArcElement,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
   Tooltip,
   Legend
 } from 'chart.js';
 
-ChartJS.register(
-  BarElement,
-  ArcElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Tooltip,
-  Legend
-);
+ChartJS.register(BarElement, ArcElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 function Section({ title, obj }) {
   const entries = Object.entries(obj || {});
@@ -48,7 +37,7 @@ export default function SummaryModal({
   open,
   onClose,
   summary,
-  mode,           // 'text' | 'graph'
+  mode, // 'text' | 'graph'
   setMode
 }) {
   const overlayRef = useRef(null);
@@ -68,8 +57,7 @@ export default function SummaryModal({
         {
           label: 'By Status',
           data,
-          backgroundColor: labels.map(() => 'rgba(0,255,255,0.6)'),
-          borderColor: labels.map(() => 'rgba(0,255,255,1)'),
+          backgroundColor: labels.map(() => `hsl(${Math.random() * 360}, 100%, 50%)`),
           borderWidth: 1
         }
       ]
@@ -85,8 +73,7 @@ export default function SummaryModal({
         {
           label: 'By Priority',
           data,
-          backgroundColor: labels.map(() => 'rgba(255, 99, 132, 0.6)'),
-          borderColor: labels.map(() => 'rgba(255, 99, 132, 1)'),
+          backgroundColor: labels.map(() => `hsl(${Math.random() * 360}, 100%, 50%)`),
           borderWidth: 1
         }
       ]
@@ -96,44 +83,31 @@ export default function SummaryModal({
   const severityData = useMemo(() => {
     const labels = Object.keys(summary?.bySeverity || {});
     const data = Object.values(summary?.bySeverity || {});
-    const colors = [
-      'rgba(255, 99, 132, 0.6)',
-      'rgba(54, 162, 235, 0.6)',
-      'rgba(255, 206, 86, 0.6)',
-      'rgba(75, 192, 192, 0.6)',
-      'rgba(153, 102, 255, 0.6)',
-      'rgba(255, 159, 64, 0.6)'
-    ];
     return {
       labels,
       datasets: [
         {
           label: 'By Severity',
           data,
-          backgroundColor: labels.map((_, i) => colors[i % colors.length]),
-          borderColor: labels.map((_, i) => colors[i % colors.length].replace('0.6', '1')),
+          backgroundColor: labels.map(() => `hsl(${Math.random() * 360}, 100%, 50%)`),
           borderWidth: 1
         }
       ]
     };
   }, [summary]);
 
-  const areaData = useMemo(() => {
-    const labels = Object.keys(summary?.byArea || {});
-    const data = Object.values(summary?.byArea || {});
-    return {
-      labels,
+  const areaCharts = useMemo(() => {
+    return Object.entries(summary?.byArea || {}).map(([area, count]) => ({
+      labels: [area],
       datasets: [
         {
-          label: 'Bugs by Area',
-          data,
-          fill: false,
-          borderColor: '#00ffff',
-          backgroundColor: '#00ffff88',
-          tension: 0.3
+          label: `${area} Bugs`,
+          data: [count],
+          backgroundColor: `hsl(${Math.random() * 360}, 100%, 50%)`,
+          borderWidth: 1
         }
       ]
-    };
+    }));
   }, [summary]);
 
   if (!open) return null;
@@ -142,9 +116,11 @@ export default function SummaryModal({
     <div
       ref={overlayRef}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4"
-      onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
+      onClick={(e) => {
+        if (e.target === overlayRef.current) onClose();
+      }}
     >
-      <div className="glass animate-fadeIn w-full max-w-5xl p-5 border-2 border-cyan-500 relative max-h-[90vh] overflow-y-auto">
+      <div className="glass w-full max-w-5xl p-5 border-2 border-cyan-500 relative">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold text-cyan-300 drop-shadow-[0_0_10px_#0ff]">
@@ -161,7 +137,8 @@ export default function SummaryModal({
         {/* Toggle */}
         <div className="flex justify-between items-center mb-4">
           <div className="text-sm text-gray-300">
-            Total bugs: <span className="font-semibold text-cyan-200">{summary?.total ?? 0}</span>
+            Total bugs:{' '}
+            <span className="font-semibold text-cyan-200">{summary?.total ?? 0}</span>
           </div>
           <button
             onClick={() => setMode(mode === 'text' ? 'graph' : 'text')}
@@ -174,24 +151,39 @@ export default function SummaryModal({
         {/* Body */}
         {mode === 'text' ? (
           <div className="grid md:grid-cols-3 gap-4">
-            <Section title="By Status"   obj={summary?.byStatus} />
+            <Section title="By Status" obj={summary?.byStatus} />
             <Section title="By Priority" obj={summary?.byPriority} />
             <Section title="By Severity" obj={summary?.bySeverity} />
-            <Section title="By Area"     obj={summary?.byArea} />
+            <Section title="By Area" obj={summary?.byArea} />
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="glass p-4 border border-cyan-500">
-              <Bar data={statusData} options={{ responsive: true, maintainAspectRatio: false }} height={220} />
+          <div className="space-y-6 max-h-[500px] overflow-y-auto pr-2">
+            {/* Main Charts */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="glass p-4 border border-cyan-500">
+                <Bar data={statusData} options={{ responsive: true, maintainAspectRatio: false }} height={220} />
+              </div>
+              <div className="glass p-4 border border-cyan-500">
+                <Bar data={priorityData} options={{ responsive: true, maintainAspectRatio: false }} height={220} />
+              </div>
+              <div className="glass p-4 border border-cyan-500 md:col-span-2">
+                <Pie data={severityData} />
+              </div>
             </div>
+
+            {/* Area Charts (Scrollable) */}
             <div className="glass p-4 border border-cyan-500">
-              <Bar data={priorityData} options={{ responsive: true, maintainAspectRatio: false }} height={220} />
-            </div>
-            <div className="glass p-4 border border-cyan-500">
-              <Pie data={severityData} />
-            </div>
-            <div className="glass p-4 border border-cyan-500 md:col-span-2">
-              <Line data={areaData} options={{ responsive: true, maintainAspectRatio: false }} height={280} />
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {areaCharts.map((chartData, idx) => (
+                  <div key={idx} className="glass p-4 border border-cyan-500">
+                    <Bar
+                      data={chartData}
+                      options={{ responsive: true, maintainAspectRatio: false }}
+                      height={180}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
