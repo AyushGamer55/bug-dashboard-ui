@@ -98,7 +98,7 @@ function App() {
             setSearch={setSearch}
             toggleTheme={toggleTheme}
             theme={theme}
-            onOpenSummary={handleOpenSummary} // Pass summary trigger
+            onOpenSummary={handleOpenSummary}
           />
 
           {loading && (
