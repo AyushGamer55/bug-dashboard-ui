@@ -56,7 +56,7 @@ function BugCard({ bug, editMode, onDelete, onUpdate }) {
 
       <div className="grid md:grid-cols-2 gap-x-6">
         {field("Scenario ID", "ScenarioID", bug.ScenarioID)}
-        {field("TestCase ID", "TestCaseID", bug.TestCaseID)}
+        {field("Category", "TestCaseID", bug.TestCaseID)}
         {field("Description", "Description", bug.Description)}
         {field("Status", "Status", bug.Status)}
         {field("Priority", "Priority", bug.Priority)}
