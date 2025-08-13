@@ -109,19 +109,19 @@ export const useBugLogic = () => {
   const exportJSON = () => exportAsJSON(bugs);
 
   const resetAll = () => {
-    if (!window.confirm("Are you sure you want to delete ALL bugs?")) return;
+  if (!window.confirm("Are you sure you want to delete ALL bugs?")) return;
 
-    fetch(`${API_BASE}/bugs/delete-all`, { method: 'DELETE' })
-      .then(res => res.json())
-      .then(() => {
-        setBugs([]);
-        toast.success("🧨 All bugs deleted from backend!");
-      })
-      .catch(err => {
-        console.error("❌ Failed to reset all bugs:", err);
-        toast.error("❌ Failed to reset bugs");
-      });
-  };
+  fetch(`${API_BASE}/bugs/delete-all`, { method: 'DELETE' })
+    .then(res => res.json())
+    .then(data => {
+      setBugs([]);
+      toast.success(`🧨 All bugs deleted from backend! (${data.deletedCount} removed)`);
+    })
+    .catch(err => {
+      console.error("❌ Failed to reset all bugs:", err);
+      toast.error("❌ Failed to reset bugs");
+    });
+};
 
   const handleAddBug = () => {
     setLoading(true);
