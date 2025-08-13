@@ -1,3 +1,4 @@
+// src/components/SummaryModal.jsx
 import React, { useMemo, useRef, useEffect } from 'react';
 import { Bar, Pie, Line } from 'react-chartjs-2';
 import {
@@ -59,6 +60,7 @@ export default function SummaryModal({
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
+  // Chart.js data for each section
   const statusData = useMemo(() => {
     const labels = Object.keys(summary?.byStatus || {});
     const data = Object.values(summary?.byStatus || {});
@@ -127,14 +129,23 @@ export default function SummaryModal({
         {
           label: 'Bugs by Area',
           data,
-          fill: false,
-          borderColor: '#00ffff',
-          backgroundColor: '#00ffff88',
-          tension: 0.3
+          backgroundColor: labels.map(() => 'rgba(0, 255, 255, 0.6)'),
+          borderColor: labels.map(() => 'rgba(0, 255, 255, 1)'),
+          borderWidth: 1
         }
       ]
     };
   }, [summary]);
+
+  const barOpts = {
+    responsive: true,
+    maintainAspectRatio: false
+  };
+
+  const horizontalBarOpts = {
+    ...barOpts,
+    indexAxis: 'y'
+  };
 
   if (!open) return null;
 
@@ -182,16 +193,16 @@ export default function SummaryModal({
         ) : (
           <div className="grid md:grid-cols-2 gap-6">
             <div className="glass p-4 border border-cyan-500">
-              <Bar data={statusData} options={{ responsive: true, maintainAspectRatio: false }} height={220} />
+              <Bar data={statusData} options={barOpts} height={220} />
             </div>
             <div className="glass p-4 border border-cyan-500">
-              <Bar data={priorityData} options={{ responsive: true, maintainAspectRatio: false }} height={220} />
+              <Bar data={priorityData} options={barOpts} height={220} />
             </div>
             <div className="glass p-4 border border-cyan-500">
               <Pie data={severityData} />
             </div>
             <div className="glass p-4 border border-cyan-500 md:col-span-2">
-              <Line data={areaData} options={{ responsive: true, maintainAspectRatio: false }} height={280} />
+              <Bar data={areaData} options={horizontalBarOpts} height={280} />
             </div>
           </div>
         )}
