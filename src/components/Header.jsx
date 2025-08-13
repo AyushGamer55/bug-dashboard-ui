@@ -11,7 +11,8 @@ function Header({
   search,
   setSearch,
   toggleTheme,
-  theme
+  theme,
+  onOpenSummary // ⬅️ added
 }) {
   return (
     <div className="glass relative flex flex-col md:flex-row justify-between items-center gap-4 mb-6 p-6 border border-cyan-400 shadow-lg">
@@ -88,6 +89,14 @@ function Header({
           className="btn bg-purple-700 text-black hover:bg-purple-500"
         >
           Add ➕
+        </button>
+
+        {/* Generate Summary */}
+        <button
+          onClick={onOpenSummary}
+          className="btn bg-orange-500 text-black hover:bg-orange-400"
+        >
+          Generate Summary 📊
         </button>
 
         <input
