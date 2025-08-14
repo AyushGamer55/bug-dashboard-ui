@@ -8,7 +8,7 @@ function BugCard({ bug, editMode, onDelete, onUpdate }) {
 
   const field = (label, key, value) => (
     <div className="mb-4">
-      <label className="block text-cyan-300 font-semibold mb-1">{label}</label>
+      <label className="block font-semibold mb-1">{label}</label>
       <div
         className={`bug-field transition-all duration-300 ${
           editMode ? 'hover:shadow-cyan focus:outline-none cursor-text' : ''
