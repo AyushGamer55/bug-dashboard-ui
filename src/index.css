@@ -150,3 +150,30 @@ body.light-mode .btn.bg-purple-700 { background-color: #9333ea; color: #fff; }
   from { opacity: 0; transform: scale(0.96); }
   to { opacity: 1; transform: scale(1); }
 }
+
+/* 🐞 BugCard field styles */
+.bug-field {
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 1px solid #00ffff66;
+  color: #fff;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+}
+
+/* Light mode BugCard field */
+body.light-mode .bug-field {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: #000;
+}
+
+/* Light mode editable focus glow */
+body.light-mode .bug-field:focus {
+  border-color: #00bcd4;
+  box-shadow: 0 0 4px #00bcd4;
+}
+
+/* Light mode BugCard labels */
+body.light-mode label {
+  color: #333;
+}
