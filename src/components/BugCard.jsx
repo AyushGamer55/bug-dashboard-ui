@@ -47,12 +47,21 @@ function BugCard({ bug, editMode, onDelete, onUpdate }) {
 
   return (
     <div className="bug-card bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white rounded-lg p-6 shadow-xl border border-cyan-700 relative transition-transform hover:scale-[1.02] duration-300">
-      <button
-        onClick={onDelete}
-        className="absolute top-3 right-3 px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-full shadow-lg transition duration-200"
-      >
-        Delete
-      </button>
+  {/* Edit Button */}
+  <button
+    onClick={toggleEdit}
+    className="absolute top-3 right-20 px-3 py-1 bg-orange-400 hover:bg-orange-500 text-white text-xs font-bold rounded-full shadow-lg transition duration-200"
+  >
+    Edit
+  </button>
+
+  {/* Delete Button */}
+  <button
+    onClick={onDelete}
+    className="absolute top-3 right-3 px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-full shadow-lg transition duration-200"
+  >
+    Delete
+  </button>
 
       <div className="grid md:grid-cols-2 gap-x-6">
         {field("Scenario ID", "ScenarioID", bug.ScenarioID)}
