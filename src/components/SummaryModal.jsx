@@ -195,7 +195,7 @@ export default function SummaryModal({
             <Section title="By Status"   obj={summary?.byStatus} />
             <Section title="By Priority" obj={summary?.byPriority} />
             <Section title="By Severity" obj={summary?.bySeverity} />
-            <Section title="By Category"     obj={summary?.byArea} />
+            <Section title="By Category" obj={summary?.byArea} />
           </div>
         ) : (
           <div className="grid md:grid-cols-2 gap-6">
@@ -217,5 +217,6 @@ export default function SummaryModal({
     </div>
   );
 }
+
 
 
