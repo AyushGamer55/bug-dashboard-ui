@@ -138,7 +138,7 @@ body.light-mode .btn.bg-purple-700 { background-color: #9333ea; color: #fff; }
 
 /* 🌟 Updated Glass & Modal Animations */
 .glass {
-  background: rgba(20, 20, 35, 0.85); /* More opaque for modals */
+  background: rgba(0, 0, 0, 1); 
   backdrop-filter: blur(10px);
 }
 
