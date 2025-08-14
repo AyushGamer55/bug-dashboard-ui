@@ -49,7 +49,7 @@ export default function SummaryModal({
   open,
   onClose,
   summary,
-  mode,           // 'text' | 'graph'
+  mode,
   setMode
 }) {
   const overlayRef = useRef(null);
@@ -60,7 +60,6 @@ export default function SummaryModal({
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
-  // Chart.js data for each section
   const statusData = useMemo(() => {
     const labels = Object.keys(summary?.byStatus || {});
     const data = Object.values(summary?.byStatus || {});
@@ -123,14 +122,22 @@ export default function SummaryModal({
   const areaData = useMemo(() => {
     const labels = Object.keys(summary?.byArea || {});
     const data = Object.values(summary?.byArea || {});
+    const greenShades = [
+      'rgba(0, 255, 0, 0.7)',
+      'rgba(0, 255, 128, 0.7)',
+      'rgba(128, 255, 0, 0.7)',
+      'rgba(50, 255, 100, 0.7)',
+      'rgba(0, 200, 0, 0.7)',
+      'rgba(0, 255, 180, 0.7)'
+    ];
     return {
       labels,
       datasets: [
         {
-          label: 'Bugs by Area',
+          label: 'By Category',
           data,
-          backgroundColor: labels.map(() => 'rgba(0, 255, 255, 0.6)'),
-          borderColor: labels.map(() => 'rgba(0, 255, 255, 1)'),
+          backgroundColor: labels.map((_, i) => greenShades[i % greenShades.length]),
+          borderColor: labels.map((_, i) => greenShades[i % greenShades.length].replace('0.7', '1')),
           borderWidth: 1
         }
       ]
@@ -188,7 +195,7 @@ export default function SummaryModal({
             <Section title="By Status"   obj={summary?.byStatus} />
             <Section title="By Priority" obj={summary?.byPriority} />
             <Section title="By Severity" obj={summary?.bySeverity} />
-            <Section title="By Area"     obj={summary?.byArea} />
+            <Section title="By Category"     obj={summary?.byArea} />
           </div>
         ) : (
           <div className="grid md:grid-cols-2 gap-6">
