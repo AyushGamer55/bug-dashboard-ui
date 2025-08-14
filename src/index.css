@@ -85,11 +85,18 @@ body.light-mode {
   font-family: 'Inter', sans-serif;
 }
 
-body.light-mode .glass {
-  background: rgba(0, 0, 0, 1);
+body.light-mode header.glass {
+  background: rgba(255, 255, 255, 0.7);
   border-color: #ccc;
   color: #000;
 }
+
+body.light-mode .glass {
+  background: rgba(0, 0, 0, 1);
+  border-color: #ccc;
+  color: #fff;
+}
+
 
 body.light-mode input,
 body.light-mode textarea {
