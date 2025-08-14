@@ -37,7 +37,7 @@ body::before {
 
 /* 🔷 Neon input glow */
 input, select, textarea {
-  background: rgba(255, 255, 255, 0.05)
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid #00ffff44;
   color: #e0e0f0;
   @apply px-3 py-2 rounded;
