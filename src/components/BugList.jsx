@@ -11,7 +11,7 @@ function BugList({ bugs, editMode, handleDelete, handleUpdate }) {
           editMode={editMode}
           onDelete={() => handleDelete(bug._id)}
           onUpdate={(updatedFields) => handleUpdate(bug._id, updatedFields)}
-          toggleEdit={toggleEdit}
+          onToggleEdit={() => setEditMode((prev) => !prev)}
         />
       ))}
     </div>
