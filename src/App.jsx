@@ -99,6 +99,7 @@ function App() {
             toggleTheme={toggleTheme}
             theme={theme}
             onOpenSummary={handleOpenSummary}
+            totalBugs={bugs.length}
           />
 
           {loading && (
