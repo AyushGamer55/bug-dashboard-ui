@@ -1,12 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
 function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
   const [savingField, setSavingField] = useState(null);
+  const [isLightMode, setIsLightMode] = useState(
+    document.body.classList.contains('light-mode')
+  );
 
-  const isLightMode = document.body.classList.contains('light-mode');
+  // Listen for mode changes dynamically
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsLightMode(document.body.classList.contains('light-mode'));
+    });
+
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+    return () => observer.disconnect();
+  }, []);
 
   const field = (label, key, value) => (
     <div className="mb-4">
