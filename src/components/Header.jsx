@@ -12,24 +12,39 @@ function Header({
   setSearch,
   toggleTheme,
   theme,
-  onOpenSummary 
+  onOpenSummary,
+  totalBugs 
 }) {
   return (
     <div className="glass relative flex flex-col md:flex-row justify-between items-center gap-4 mb-6 p-6 border border-cyan-400 shadow-lg">
       
-      {/* Light/Dark Mode Toggle */}
-      <button
-        onClick={() => {
-          toggleTheme();
-          const btn = document.querySelector(".theme-toggle");
-          btn.classList.add("spin");
-          setTimeout(() => btn.classList.remove("spin"), 600);
-        }}
-        className="theme-toggle absolute top-3 right-3 text-2xl hover:scale-110 transition z-10"
-        title="Toggle Light/Dark Mode"
-      >
-        {theme === "dark" ? "☀️" : "🌙"}
-      </button>
+      {/* Top Right Controls */}
+      <div className="absolute top-3 right-3 flex items-center gap-4 z-10">
+        {/* Total Bugs Counter */}
+        <div
+          className={`px-3 py-1 rounded text-sm font-semibold border transition 
+            ${theme === "dark"
+              ? "bg-black/60 text-cyan-300 border-cyan-500"
+              : "bg-white text-black border-gray-400"
+            }`}
+        >
+          🐞 Total Bugs: <span className="font-bold">{totalBugs}</span>
+        </div>
+
+        {/* Light/Dark Mode Toggle */}
+        <button
+          onClick={() => {
+            toggleTheme();
+            const btn = document.querySelector(".theme-toggle");
+            btn.classList.add("spin");
+            setTimeout(() => btn.classList.remove("spin"), 600);
+          }}
+          className="theme-toggle text-2xl hover:scale-110 transition"
+          title="Toggle Light/Dark Mode"
+        >
+          {theme === "dark" ? "☀️" : "🌙"}
+        </button>
+      </div>
 
       {/* Logo + Title */}
       <div className="flex flex-col sm:flex-row items-center sm:items-center gap-3 sm:gap-4 text-center sm:text-left">
@@ -39,7 +54,7 @@ function Header({
           className="h-32 sm:h-28 w-auto object-contain drop-shadow-[0_0_10px_#f00] animate-pulse"
         />
         <div>
-          <h1 className="text-5xl md:6x1 sm:text-5x1 font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff] animate-pulse">
+           <h1 className="text-5xl md:6x1 sm:text-5x1 font-bold text-cyan-400 tracking-wider drop-shadow-[0_0_10px_#0ff] animate-pulse">
             Bug Report Dashboard
           </h1>
           <p className="text-sm text-purple-300 italic">
@@ -104,7 +119,11 @@ function Header({
           placeholder="🔎 Search bugs..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="px-4 py-2 bg-[#1c1c2a] text-cyan-200 border border-cyan-400 rounded shadow focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          className={`px-4 py-2 rounded shadow focus:outline-none focus:ring-2 
+            ${theme === "dark"
+              ? "bg-[#1c1c2a] text-cyan-200 border border-cyan-400 focus:ring-cyan-500"
+              : "bg-white text-black border border-gray-400 focus:ring-gray-500"
+            }`}
         />
       </div>
     </div>
