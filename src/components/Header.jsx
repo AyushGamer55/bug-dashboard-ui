@@ -28,7 +28,7 @@ function Header({
               : "bg-white text-black border-gray-400"
             }`}
         >
-          🐞 Total Bugs: <span className="font-bold">{totalBugs}</span>
+          🐞Total Bugs: <span className="font-bold">{totalBugs}</span>
         </div>
 
         {/* Light/Dark Mode Toggle */}
