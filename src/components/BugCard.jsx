@@ -6,13 +6,23 @@ const API_BASE = import.meta.env.VITE_API_URL;
 function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
   const [savingField, setSavingField] = useState(null);
 
+  const isLightMode = document.body.classList.contains('light-mode');
+
   const field = (label, key, value) => (
     <div className="mb-4">
-      <label className="block text-cyan-300 font-semibold mb-1">{label}</label>
-      <div
-        className={`w-full px-3 py-2 rounded bg-black bg-opacity-50 border border-cyan-600 text-white transition-all duration-300 ${
-          editMode ? 'hover:shadow-cyan focus:outline-none cursor-text' : ''
+      <label
+        className={`block font-semibold mb-1 ${
+          isLightMode ? 'text-gray-800' : 'text-cyan-300'
         }`}
+      >
+        {label}
+      </label>
+      <div
+        className={`w-full px-3 py-2 rounded border transition-all duration-300 ${
+          isLightMode
+            ? 'bg-white border-gray-400 text-black'
+            : 'bg-black bg-opacity-50 border-cyan-600 text-white'
+        } ${editMode ? 'hover:shadow-cyan focus:outline-none cursor-text' : ''}`}
         contentEditable={editMode}
         suppressContentEditableWarning={true}
         data-key={key}
@@ -46,8 +56,13 @@ function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
   );
 
   return (
-    <div className="bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white rounded-lg p-6 shadow-xl border border-cyan-700 relative transition-transform hover:scale-[1.02] duration-300">
-      
+    <div
+      className={`rounded-lg p-6 shadow-xl border relative transition-transform hover:scale-[1.02] duration-300
+      ${isLightMode
+        ? 'bg-white border-gray-300 text-black'
+        : 'bg-gradient-to-br from-black via-gray-900 to-gray-800 border-cyan-700 text-white'
+      }`}
+    >
       {/* Edit Button */}
       <button
         onClick={onToggleEdit}
