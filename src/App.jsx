@@ -121,7 +121,7 @@ function App() {
             editMode={editMode}
             handleDelete={handleDelete}
             handleUpdate={handleUpdate}
-            toggleEdit={() => setEditMode(!editMode)}
+            onToggleEdit={() => setEditMode((prev) => !prev)}
           />
 
           {/* Summary Modal */}
