@@ -19,7 +19,7 @@ export const useBugLogic = () => {
   });
 
   const justUploadedRef = useRef(false);
-  const firstLoadRef = useRef(true); // Track if it's the first load
+  const firstLoadRef = useRef(true); 
 
   useEffect(() => {
     const fetchData = async () => {
