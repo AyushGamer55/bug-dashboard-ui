@@ -86,8 +86,8 @@ export default function SummaryModal({
         {
           label: 'By Priority',
           data,
-          backgroundColor: labels.map(() => 'rgba(255, 99, 132, 0.6)'),
-          borderColor: labels.map(() => 'rgba(255, 99, 132, 1)'),
+          backgroundColor: labels.map(() => 'rgba(55, 99, 132, 0.6)'),
+          borderColor: labels.map(() => 'rgba(55, 99, 132, 1)'),
           borderWidth: 1
         }
       ]
@@ -217,3 +217,4 @@ export default function SummaryModal({
     </div>
   );
 }
+
