@@ -177,3 +177,12 @@ body.light-mode .bug-field:focus {
 body.light-mode label {
   color: #333;
 }
+/* Light mode BugCard */
+body.light-mode .bug-card{
+  background:#ffffff;
+  border:1px solid #000000;
+  color:#000;
+}
+body.light-mode .bug-card:hover {
+  box-shadow:0 0 8px #00bcd4;
+}
