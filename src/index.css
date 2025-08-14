@@ -37,7 +37,7 @@ body::before {
 
 /* 🔷 Neon input glow */
 input, select, textarea {
-  background: rgba(0, 0, 0, 1);
+  background: rgba(255, 255, 255, 0.05)
   border: 1px solid #00ffff44;
   color: #e0e0f0;
   @apply px-3 py-2 rounded;
@@ -86,7 +86,7 @@ body.light-mode {
 }
 
 body.light-mode .glass {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 1);
   border-color: #ccc;
   color: #000;
 }
@@ -138,7 +138,7 @@ body.light-mode .btn.bg-purple-700 { background-color: #9333ea; color: #fff; }
 
 /* 🌟 Updated Glass & Modal Animations */
 .glass {
-  background: rgba(0, 0, 0, 1); 
+  background: rgba(20, 25, 35, 0.6); 
   backdrop-filter: blur(10px);
 }
 
