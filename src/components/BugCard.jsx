@@ -10,7 +10,7 @@ function BugCard({ bug, editMode, onDelete, onUpdate }) {
     <div className="mb-4">
       <label className="block text-cyan-300 font-semibold mb-1">{label}</label>
       <div
-        className={`w-full px-3 py-2 rounded bg-black bg-opacity-50 border border-cyan-600 text-white transition-all duration-300 ${
+        className={`bug-field transition-all duration-300 ${
           editMode ? 'hover:shadow-cyan focus:outline-none cursor-text' : ''
         }`}
         contentEditable={editMode}
