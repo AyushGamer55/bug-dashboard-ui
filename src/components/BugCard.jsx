@@ -47,12 +47,17 @@ function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
 
   return (
     <div className="bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white rounded-lg p-6 shadow-xl border border-cyan-700 relative transition-transform hover:scale-[1.02] duration-300">
+      
       {/* Edit Button */}
       <button
         onClick={onToggleEdit}
-        className="absolute top-3 right-20 px-3 py-1 bg-orange-400 hover:bg-orange-500 text-white text-xs font-bold rounded-full shadow-lg transition duration-200"
+        className={`absolute top-3 right-20 px-3 py-1 text-xs font-bold rounded-full shadow-lg transition duration-200 ${
+          editMode
+            ? 'bg-orange-500 hover:bg-orange-400 text-white'
+            : 'bg-orange-400 hover:bg-orange-500 text-white'
+        }`}
       >
-        Edit
+        {editMode ? 'Editing' : 'Edit'}
       </button>
 
       {/* Delete Button */}
