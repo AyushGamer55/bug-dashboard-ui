@@ -16,7 +16,7 @@ function Header({
   totalBugs 
 }) {
   return (
-    <div className="relative flex flex-col md:flex-row justify-between items-center gap-4 mb-6 p-6 border border-cyan-400 shadow-lg">
+    <div className="relative flex flex-col md:flex-row justify-between items-center gap-4 mb-6 p-6 shadow-lg">
       
       {/* Top Right Controls */}
       <div className="absolute top-3 right-3 flex items-center gap-4 z-10">
