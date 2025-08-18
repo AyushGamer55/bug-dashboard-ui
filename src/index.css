@@ -191,8 +191,6 @@ body.light-mode .bug-card:hover {
 .Toastify__toast {
   border-radius: 8px;
   font-weight: bold;
-  text-shadow: 0 0 6px rgba(0, 255, 255, 0.8);
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
   transition: all 0.3s ease-in-out;
 }
 
@@ -201,14 +199,17 @@ body:not(.light-mode) .Toastify__toast {
   background: linear-gradient(90deg, #0f0c29, #302b63, #24243e);
   color: #00fff7;
   border: 1px solid #00fff7;
+  text-shadow: 0 0 6px rgba(0, 255, 255, 0.9);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
 }
 
-/* Light mode soft neon style */
+/* Light mode neon style (white + purple) */
 body.light-mode .Toastify__toast {
-  background: linear-gradient(90deg, #fdfbfb, #ebedee);
-  color: #222;
-  border: 1px solid #555;
-  text-shadow: none;
+  background: linear-gradient(90deg, #ffffff, #f3e6ff);
+  color: #000;
+  border: 1px solid #a855f7; /* neon purple */
+  text-shadow: 0 0 6px rgba(168, 85, 247, 0.8);
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
 }
 
 /* Success */
