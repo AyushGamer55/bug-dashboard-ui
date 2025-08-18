@@ -1,22 +1,24 @@
 // src/components/FilterModal.jsx
-import React from "react";
- 
+import React, { useState } from "react";
+
 function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
-  if (!open) return null;
- 
+  const [isClosing, setIsClosing] = useState(false);
+
+  if (!open && !isClosing) return null;
+
   // Dynamically get unique values for each field from bugs
   const getUniqueValues = (key) => {
     const values = bugs.map((bug) => bug[key]).filter(Boolean);
     return [...new Set(values)];
   };
- 
+
   const fields = [
     { label: "Status", key: "Status" },
     { label: "Priority", key: "Priority" },
     { label: "Severity", key: "Severity" },
     { label: "Category", key: "TestCaseID" },
   ];
- 
+
   const handleToggle = (key, value) => {
     setFilters((prev) => {
       const existing = prev[key] || [];
@@ -28,38 +30,42 @@ function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
       };
     });
   };
- 
+
   const handleReset = () => {
     setFilters({});
   };
- 
+
+  // ✅ New: trigger smooth close
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsClosing(false);
+      onClose();
+    }, 500); // match animation duration
+  };
+
   const hasActiveFilters = Object.values(filters).some(
     (arr) => arr && arr.length > 0
   );
- 
+
   return (
     <div className="fixed inset-0 z-50 flex">
-      {/* Background overlay with fade */}
+      {/* Background overlay */}
+      <div className="flex-1 bg-black/50" onClick={handleClose} />
+
+      {/* Drawer */}
       <div
-        className="flex-1 bg-black/60 backdrop-blur-sm opacity-0 animate-fadeIn"
-        onClick={onClose}
-      />
- 
-      {/* Drawer with smooth slide + fade */}
-      <div
-        className={`w-64 sm:w-80 h-full shadow-xl border-l overflow-y-auto transform transition-all duration-500 ease-in-out opacity-0 animate-slideFadeIn
+        className={`w-64 sm:w-80 h-full shadow-lg border-l overflow-y-auto transform transition-transform
         ${theme === "dark"
           ? "bg-gradient-to-b from-purple-900 via-indigo-900 to-blue-900 text-white border-purple-700"
-          : "bg-gradient-to-b from-pink-100 via-purple-100 to-blue-100 text-black border-gray-300"
-        }`}
-        onClick={(e) => e.stopPropagation()}
+          : "bg-gradient-to-b from-pink-100 via-purple-100 to-blue-100 text-black border-gray-300"}
+        ${isClosing ? "animate-slideFadeOut" : "animate-slideIn"}`}
       >
-        {/* Header */}
         <div className="flex justify-between items-center px-4 py-3 border-b border-gray-500">
           <h2 className="text-lg font-bold text-purple-400">✨ Filters</h2>
- 
+
           <div className="flex items-center gap-3">
-            {/* 🚫 Clear All */}
+            {/* 🚫 Clear All icon (only shows if filters applied) */}
             {hasActiveFilters && (
               <button
                 onClick={handleReset}
@@ -69,9 +75,9 @@ function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
                 🚫
               </button>
             )}
- 
+
             <button
-              onClick={onClose}
+              onClick={handleClose}
               className="text-xl font-bold text-pink-500 hover:text-pink-700"
               title="Close"
             >
@@ -79,7 +85,7 @@ function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
             </button>
           </div>
         </div>
- 
+
         {/* Filter Options */}
         <div className="p-4 space-y-6">
           {fields.map((field) => {
@@ -108,8 +114,8 @@ function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
               </div>
             );
           })}
- 
-          {/* Reset Button */}
+
+          {/* ✅ Reset Button at Bottom */}
           <div className="pt-6">
             <button
               onClick={handleReset}
@@ -127,5 +133,5 @@ function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
     </div>
   );
 }
- 
+
 export default FilterModal;
