@@ -6,7 +6,7 @@ import AddBugForm from "./components/AddBugForm";
 import BugList from "./components/BugList";
 import VideoIntro from "./components/VideoIntro";
 import SummaryModal from "./components/SummaryModal";
-import FilterModal from "./components/FilterModal"; 
+import FilterModal from "./components/FilterModal";
 
 function App() {
   const {
@@ -61,22 +61,17 @@ function App() {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   };
 
-  // 🔹 Apply filters + search
-  const filteredBugs = bugs
-    .filter((bug) => {
-      for (const key in filters) {
-        if (filters[key].length > 0 && !filters[key].includes(bug[key])) {
-          return false;
-        }
-      }
-      return true;
-    })
-    .filter((bug) => {
-      const query = search.trim().toLowerCase();
-      return Object.values(bug).some((value) =>
-        (value || "").toString().toLowerCase().includes(query)
-      );
+  const filteredBugs = bugs.filter((bug) => {
+    const query = search.trim().toLowerCase();
+    const matchesSearch = Object.values(bug).some((value) =>
+      (value || "").toString().toLowerCase().includes(query)
+    );
+    const matchesFilters = Object.entries(filters).every(([key, values]) => {
+      if (values.length === 0) return true; // no filter applied for this field
+      return values.includes(bug[key]);
     });
+    return matchesSearch && matchesFilters;
+  });
 
   const handleOpenSummary = async () => {
     if (bugs.length === 0) {
