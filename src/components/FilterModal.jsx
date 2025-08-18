@@ -1,10 +1,8 @@
 // src/components/FilterModal.jsx
-import React, { useState } from "react";
+import React from "react";
 
 function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
-  const [isClosing, setIsClosing] = useState(false);
-
-  if (!open && !isClosing) return null;
+  if (!open) return null;
 
   // Dynamically get unique values for each field from bugs
   const getUniqueValues = (key) => {
@@ -31,19 +29,12 @@ function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
     });
   };
 
+  // ✅ Reset filters
   const handleReset = () => {
     setFilters({});
   };
 
-  // ✅ New: trigger smooth close
-  const handleClose = () => {
-    setIsClosing(true);
-    setTimeout(() => {
-      setIsClosing(false);
-      onClose();
-    }, 500); // match animation duration
-  };
-
+  // Check if any filters are active
   const hasActiveFilters = Object.values(filters).some(
     (arr) => arr && arr.length > 0
   );
@@ -51,15 +42,15 @@ function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
   return (
     <div className="fixed inset-0 z-50 flex">
       {/* Background overlay */}
-      <div className="flex-1 bg-black/50" onClick={handleClose} />
+      <div className="flex-1 bg-black/50" onClick={onClose} />
 
       {/* Drawer */}
       <div
-        className={`w-64 sm:w-80 h-full shadow-lg border-l overflow-y-auto transform transition-transform
+        className={`w-64 sm:w-80 h-full shadow-lg border-l overflow-y-auto transition-transform transform
         ${theme === "dark"
           ? "bg-gradient-to-b from-purple-900 via-indigo-900 to-blue-900 text-white border-purple-700"
           : "bg-gradient-to-b from-pink-100 via-purple-100 to-blue-100 text-black border-gray-300"}
-        ${isClosing ? "animate-slideFadeOut" : "animate-slideIn"}`}
+        animate-slideIn`}
       >
         <div className="flex justify-between items-center px-4 py-3 border-b border-gray-500">
           <h2 className="text-lg font-bold text-purple-400">✨ Filters</h2>
@@ -77,7 +68,7 @@ function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
             )}
 
             <button
-              onClick={handleClose}
+              onClick={onClose}
               className="text-xl font-bold text-pink-500 hover:text-pink-700"
               title="Close"
             >
