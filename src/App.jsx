@@ -1,4 +1,6 @@
 // src/App.jsx
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import React, { useState, useEffect } from "react";
 import { useBugLogic } from "./hooks/useBugLogic";
 import Header from "./components/Header";
@@ -136,7 +138,7 @@ function App() {
             theme={theme}
             onOpenSummary={handleOpenSummary}
             totalBugs={bugs.length}
-            onOpenFilters={() => setShowFilters(true)} 
+            onOpenFilters={handleOpenFilters}
           />
 
           {loading && (
