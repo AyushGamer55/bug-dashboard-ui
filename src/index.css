@@ -187,3 +187,51 @@ body.light-mode .bug-card{
 body.light-mode .bug-card:hover {
   box-shadow:0 0 8px #00bcd4;
 }
+/* 🔹 Toastify global styles (Cyberpunk neon theme) */
+.Toastify__toast {
+  border-radius: 8px;
+  font-weight: bold;
+  text-shadow: 0 0 6px rgba(0, 255, 255, 0.8);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+  transition: all 0.3s ease-in-out;
+}
+
+/* Dark mode neon style */
+body:not(.light-mode) .Toastify__toast {
+  background: linear-gradient(90deg, #0f0c29, #302b63, #24243e);
+  color: #00fff7;
+  border: 1px solid #00fff7;
+}
+
+/* Light mode soft neon style */
+body.light-mode .Toastify__toast {
+  background: linear-gradient(90deg, #fdfbfb, #ebedee);
+  color: #222;
+  border: 1px solid #555;
+  text-shadow: none;
+}
+
+/* Success */
+.Toastify__toast--success {
+  border-left: 6px solid #00ffcc;
+  box-shadow: 0 0 12px #00ffcc;
+}
+
+/* Error */
+.Toastify__toast--error {
+  border-left: 6px solid #ff0055;
+  box-shadow: 0 0 12px #ff0055;
+}
+
+/* Warning */
+.Toastify__toast--warning {
+  border-left: 6px solid #ffcc00;
+  box-shadow: 0 0 12px #ffcc00;
+  color: #000;
+}
+
+/* Info */
+.Toastify__toast--info {
+  border-left: 6px solid #00aaff;
+  box-shadow: 0 0 12px #00aaff;
+}
