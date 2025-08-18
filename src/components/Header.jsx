@@ -15,19 +15,8 @@ function Header({
   theme,
   onOpenSummary,
   totalBugs,
-  onOpenFilters,
-  filters,
-  setFilters
+  onOpenFilters
 }) {
-  // ✅ Safe check so filters=null won't break
-  const hasActiveFilters = filters
-    ? Object.values(filters).some((arr) => arr && arr.length > 0)
-    : false;
-
-  const handleResetFilters = () => {
-    setFilters({});
-  };
-
   return (
     <div className="relative flex flex-col md:flex-row justify-between items-center gap-4 mb-6 p-6 shadow-lg">
       
@@ -127,29 +116,13 @@ function Header({
           Generate Summary 📊
         </button>
         
-        {/* Filters + Clear */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={onOpenFilters}
-            className="btn bg-pink-300 text-black hover:bg-pink-400"
+        <button
+          onClick={onOpenFilters}
+          className="btn bg-pink-300 text-black hover:bg-pink-400"
           >
-            Filters ⚙️
-          </button>
+          Filters ⚙️
+        </button>
 
-          {/* 🚫 Clear Filters only if active */}
-          {hasActiveFilters && (
-            <button
-              onClick={handleResetFilters}
-              className={`text-xl hover:scale-125 transition drop-shadow-[0_0_8px_#f00] animate-pulse 
-                ${theme === "dark" ? "text-red-400 hover:text-red-300" : "text-blue-600 hover:text-blue-500"}`}
-              title="Clear All Filters"
-            >
-              🚫
-            </button>
-          )}
-        </div>
-
-        {/* Search */}
         <input
           type="text"
           placeholder="🔎 Search bugs..."
