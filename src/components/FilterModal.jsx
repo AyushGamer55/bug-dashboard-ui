@@ -1,0 +1,85 @@
+// src/components/FilterModal.jsx
+import React from "react";
+
+function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
+  if (!open) return null;
+
+  // Dynamically get unique values for each field from bugs
+  const getUniqueValues = (key) => {
+    const values = bugs.map((bug) => bug[key]).filter(Boolean);
+    return [...new Set(values)];
+  };
+
+  const fields = [
+    { label: "Status", key: "Status" },
+    { label: "Priority", key: "Priority" },
+    { label: "Severity", key: "Severity" },
+    { label: "Category", key: "TestCaseID" },
+  ];
+
+  const handleToggle = (key, value) => {
+    setFilters((prev) => {
+      const existing = prev[key] || [];
+      return {
+        ...prev,
+        [key]: existing.includes(value)
+          ? existing.filter((v) => v !== value)
+          : [...existing, value],
+      };
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex">
+      {/* Background overlay */}
+      <div
+        className="flex-1 bg-black/50"
+        onClick={onClose}
+      />
+
+      {/* Drawer */}
+      <div
+        className={`w-64 sm:w-80 h-full shadow-lg border-l overflow-y-auto transition-transform transform
+        ${theme === "dark" ? "bg-[#0b0b1a] text-cyan-200 border-cyan-700" : "bg-white text-black border-gray-300"}
+        animate-slideIn`}
+      >
+        <div className="flex justify-between items-center px-4 py-3 border-b border-gray-500">
+          <h2 className="text-lg font-bold text-purple-400">✨ Filters</h2>
+          <button
+            onClick={onClose}
+            className="text-xl font-bold text-pink-500 hover:text-pink-700"
+          >
+            ✖
+          </button>
+        </div>
+
+        {/* Filter Options */}
+        <div className="p-4 space-y-6">
+          {fields.map((field) => {
+            const values = getUniqueValues(field.key);
+            if (values.length === 0) return null;
+            return (
+              <div key={field.key}>
+                <h3 className="font-semibold text-blue-400 mb-2">{field.label}</h3>
+                <div className="flex flex-col gap-2">
+                  {values.map((val) => (
+                    <label key={val} className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={filters[field.key]?.includes(val) || false}
+                        onChange={() => handleToggle(field.key, val)}
+                      />
+                      <span>{val}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default FilterModal;
