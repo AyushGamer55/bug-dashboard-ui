@@ -1,87 +1,99 @@
-// src/components/FilterModal.jsx
 import React from "react";
 
-function FilterModal({ open, onClose, filters, setFilters, bugs, theme }) {
+function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
   if (!open) return null;
 
-  // Collect unique values for each field dynamically
-  const fieldValues = {};
-  bugs.forEach((bug) => {
-    Object.entries(bug).forEach(([key, value]) => {
-      if (!value) return;
-      if (!fieldValues[key]) fieldValues[key] = new Set();
-      fieldValues[key].add(value);
-    });
-  });
+  // Dynamically get unique values for each field from bugs
+  const getUniqueValues = (key) => {
+    const values = bugs.map((bug) => bug[key]).filter(Boolean);
+    return [...new Set(values)];
+  };
 
-  const toggleFilter = (key, value) => {
+  const fields = [
+    { label: "Status", key: "Status" },
+    { label: "Priority", key: "Priority" },
+    { label: "Severity", key: "Severity" },
+    { label: "Category", key: "TestCaseID" },
+  ];
+
+  const handleToggle = (key, value) => {
     setFilters((prev) => {
-      const current = prev[key] || [];
-      if (current.includes(value)) {
-        return { ...prev, [key]: current.filter((v) => v !== value) };
-      } else {
-        return { ...prev, [key]: [...current, value] };
-      }
+      const existing = prev[key] || [];
+      return {
+        ...prev,
+        [key]: existing.includes(value)
+          ? existing.filter((v) => v !== value)
+          : [...existing, value],
+      };
     });
   };
 
-  const resetFilters = () => {
+  // ✅ Reset filters
+  const handleReset = () => {
     setFilters({});
   };
 
   return (
-    <div
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-end z-50"
-      onClick={onClose}
-    >
+    <div className="fixed inset-0 z-50 flex">
+      {/* Background overlay */}
       <div
-        className={`w-72 sm:w-80 h-full shadow-xl border-l overflow-y-auto transform transition-transform duration-500 ease-in-out ${
-          theme === "dark"
-            ? "bg-gradient-to-b from-purple-900 via-indigo-900 to-blue-900 text-white border-purple-700"
-            : "bg-gradient-to-b from-pink-100 via-purple-100 to-blue-100 text-black border-gray-300"
-        }`}
-        onClick={(e) => e.stopPropagation()}
+        className="flex-1 bg-black/50"
+        onClick={onClose}
+      />
+
+      {/* Drawer */}
+      <div
+        className={`w-64 sm:w-80 h-full shadow-lg border-l overflow-y-auto transition-transform transform
+        ${theme === "dark" ? "bg-[#0b0b1a] text-cyan-200 border-cyan-700" : "bg-white text-black border-gray-300"}
+        animate-slideIn`}
       >
-        {/* Header */}
-        <div className="p-4 border-b flex justify-between items-center">
-          <h2 className="font-bold text-lg">🎛 Filters</h2>
+        <div className="flex justify-between items-center px-4 py-3 border-b border-gray-500">
+          <h2 className="text-lg font-bold text-purple-400">✨ Filters</h2>
           <button
             onClick={onClose}
-            className="text-lg hover:scale-110 transition"
+            className="text-xl font-bold text-pink-500 hover:text-pink-700"
           >
             ✖
           </button>
         </div>
 
         {/* Filter Options */}
-        <div className="p-4 space-y-4">
-          {Object.entries(fieldValues).map(([key, values]) => (
-            <div key={key} className="border-b pb-2">
-              <h3 className="font-semibold mb-2">{key}</h3>
-              <div className="space-y-1 max-h-32 overflow-y-auto pr-1">
-                {[...values].map((value) => (
-                  <label key={value} className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={filters[key]?.includes(value) || false}
-                      onChange={() => toggleFilter(key, value)}
-                    />
-                    <span className="text-sm">{value}</span>
-                  </label>
-                ))}
+        <div className="p-4 space-y-6">
+          {fields.map((field) => {
+            const values = getUniqueValues(field.key);
+            if (values.length === 0) return null;
+            return (
+              <div key={field.key}>
+                <h3 className="font-semibold text-blue-400 mb-2">{field.label}</h3>
+                <div className="flex flex-col gap-2">
+                  {values.map((val) => (
+                    <label key={val} className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={filters[field.key]?.includes(val) || false}
+                        onChange={() => handleToggle(field.key, val)}
+                      />
+                      <span>{val}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            );
+          })}
 
-        {/* Reset Button */}
-        <div className="p-4 border-t">
-          <button
-            onClick={resetFilters}
-            className="w-full py-2 rounded font-bold bg-pink-400 hover:bg-pink-500 text-black transition"
-          >
-            🔄 Reset Filters
-          </button>
+          {/* ✅ Reset Button */}
+          <div className="pt-6">
+            <button
+              onClick={handleReset}
+              className={`w-full py-2 rounded font-semibold transition ${
+                theme === "dark"
+                  ? "bg-[#007FFF] text-white hover:bg-[#3399FF]" // azure blue
+                  : "bg-[#007FFF] text-black hover:bg-[#66B2FF]"
+              }`}
+            >
+              Reset Filters
+            </button>
+          </div>
         </div>
       </div>
     </div>
