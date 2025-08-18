@@ -113,6 +113,13 @@ function Header({
         >
           Generate Summary 📊
         </button>
+        
+        <button
+          onClick={onOpenFilters}
+          className="btn bg-pink-300 text-black hover:bg-pink-400"
+          >
+          Filters 🎛
+        </button>
 
         <input
           type="text"
