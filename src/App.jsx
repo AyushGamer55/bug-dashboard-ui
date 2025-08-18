@@ -35,6 +35,12 @@ function App() {
   const [summaryData, setSummaryData] = useState(null);
   const [summaryMode, setSummaryMode] = useState("text");
 
+  // 🔹 New Filter States
+  const [filterStatus, setFilterStatus] = useState("");
+  const [filterPriority, setFilterPriority] = useState("");
+  const [filterSeverity, setFilterSeverity] = useState("");
+  const [filterCategory, setFilterCategory] = useState("");
+
   useEffect(() => {
     document.body.className = theme === "light" ? "light-mode" : "";
   }, [theme]);
@@ -56,11 +62,20 @@ function App() {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   };
 
+  // 🔹 Apply Search + Filters
   const filteredBugs = bugs.filter((bug) => {
     const query = search.trim().toLowerCase();
-    return Object.values(bug).some((value) =>
+    const matchesSearch = Object.values(bug).some((value) =>
       (value || "").toString().toLowerCase().includes(query)
     );
+
+    const matchesFilters =
+      (!filterStatus || bug.Status === filterStatus) &&
+      (!filterPriority || bug.Priority === filterPriority) &&
+      (!filterSeverity || bug.Severity === filterSeverity) &&
+      (!filterCategory || bug.TestCaseID === filterCategory);
+
+    return matchesSearch && matchesFilters;
   });
 
   const handleOpenSummary = async () => {
@@ -107,6 +122,54 @@ function App() {
               Loading...
             </div>
           )}
+
+          {/* 🔹 Filters Section */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="p-2 border rounded bg-gray-800 text-white dark:bg-[#1c1c2a]"
+            >
+              <option value="">All Status</option>
+              <option value="Pass">Pass</option>
+              <option value="Fail">Fail</option>
+            </select>
+
+            <select
+              value={filterPriority}
+              onChange={(e) => setFilterPriority(e.target.value)}
+              className="p-2 border rounded bg-gray-800 text-white dark:bg-[#1c1c2a]"
+            >
+              <option value="">All Priority</option>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+
+            <select
+              value={filterSeverity}
+              onChange={(e) => setFilterSeverity(e.target.value)}
+              className="p-2 border rounded bg-gray-800 text-white dark:bg-[#1c1c2a]"
+            >
+              <option value="">All Severity</option>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+
+            <select
+              value={filterCategory}
+              onChange={(e) => setFilterCategory(e.target.value)}
+              className="p-2 border rounded bg-gray-800 text-white dark:bg-[#1c1c2a]"
+            >
+              <option value="">All Categories</option>
+              <option value="Livestream">Livestream</option>
+              <option value="Screenshot">Screenshot</option>
+              <option value="Apps">Apps</option>
+              <option value="URL">URL</option>
+              <option value="Others">Others</option>
+            </select>
+          </div>
 
           {showAddForm && (
             <AddBugForm
