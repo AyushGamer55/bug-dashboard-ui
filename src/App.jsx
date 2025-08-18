@@ -15,10 +15,12 @@ function App() {
     search,
     loading,
     showAddForm,
+    showFilters,
     newBug,
     setSearch,
     setEditMode,
     setShowAddForm,
+    setShowFilters,
     setNewBug,
     handleFile,
     handleAddBug,
@@ -26,6 +28,7 @@ function App() {
     exportJSON,
     handleDelete,
     handleUpdate,
+    handleOpenFilters, 
   } = useBugLogic();
 
   const [theme, setTheme] = useState("dark");
@@ -36,14 +39,15 @@ function App() {
   const [summaryData, setSummaryData] = useState(null);
   const [summaryMode, setSummaryMode] = useState("text");
 
-  // 🔹 Filter states
+  // 🔹 Filters data (active filters applied)
   const [filters, setFilters] = useState({});
-  const [showFilters, setShowFilters] = useState(false);
 
+  // Apply theme to body
   useEffect(() => {
     document.body.className = theme === "light" ? "light-mode" : "";
   }, [theme]);
 
+  // Check intro video state
   useEffect(() => {
     if (sessionStorage.getItem("introPlayed") === "true") {
       setShowIntro(false);
@@ -61,15 +65,18 @@ function App() {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   };
 
+  // Apply search + filters
   const filteredBugs = bugs.filter((bug) => {
     const query = search.trim().toLowerCase();
     const matchesSearch = Object.values(bug).some((value) =>
       (value || "").toString().toLowerCase().includes(query)
     );
+
     const matchesFilters = Object.entries(filters).every(([key, values]) => {
-      if (values.length === 0) return true; // no filter applied for this field
+      if (!values || values.length === 0) return true;
       return values.includes(bug[key]);
     });
+
     return matchesSearch && matchesFilters;
   });
 
@@ -110,7 +117,7 @@ function App() {
             theme={theme}
             onOpenSummary={handleOpenSummary}
             totalBugs={bugs.length}
-            onOpenFilters={handleOpenFilters}
+            onOpenFilters={handleOpenFilters} // ✅ fixed
           />
 
           {loading && (
