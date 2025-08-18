@@ -119,7 +119,7 @@ function Header({
           onClick={onOpenFilters}
           className="btn bg-pink-300 text-black hover:bg-pink-400"
           >
-          Filters 🎛
+          Filters ⚙️
         </button>
 
         <input
