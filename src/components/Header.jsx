@@ -13,7 +13,8 @@ function Header({
   toggleTheme,
   theme,
   onOpenSummary,
-  totalBugs 
+  totalBugs,
+  onOpenFilters
 }) {
   return (
     <div className="relative flex flex-col md:flex-row justify-between items-center gap-4 mb-6 p-6 shadow-lg">
