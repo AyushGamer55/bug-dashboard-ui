@@ -6,7 +6,7 @@ import AddBugForm from "./components/AddBugForm";
 import BugList from "./components/BugList";
 import VideoIntro from "./components/VideoIntro";
 import SummaryModal from "./components/SummaryModal";
-import FilterModal from "./components/FilterModal"; // ⬅️ NEW
+import FilterModal from "./components/FilterModal"; 
 
 function App() {
   const {
