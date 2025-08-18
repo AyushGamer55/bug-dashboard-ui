@@ -187,3 +187,19 @@ body.light-mode .bug-card{
 body.light-mode .bug-card:hover {
   box-shadow:0 0 8px #00bcd4;
 }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease forwards;
+}
+ 
+@keyframes slideFadeIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.animate-slideFadeIn {
+  animation: slideFadeIn 0.5s ease forwards;
+}
+ 
