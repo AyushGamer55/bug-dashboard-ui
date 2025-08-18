@@ -1,3 +1,4 @@
+// src/components/FilterModal.jsx
 import React from "react";
 
 function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
@@ -33,13 +34,15 @@ function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
     setFilters({});
   };
 
+  // Check if any filters are active
+  const hasActiveFilters = Object.values(filters).some(
+    (arr) => arr && arr.length > 0
+  );
+
   return (
     <div className="fixed inset-0 z-50 flex">
       {/* Background overlay */}
-      <div
-        className="flex-1 bg-black/50"
-        onClick={onClose}
-      />
+      <div className="flex-1 bg-black/50" onClick={onClose} />
 
       {/* Drawer */}
       <div
@@ -49,12 +52,27 @@ function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
       >
         <div className="flex justify-between items-center px-4 py-3 border-b border-gray-500">
           <h2 className="text-lg font-bold text-purple-400">✨ Filters</h2>
-          <button
-            onClick={onClose}
-            className="text-xl font-bold text-pink-500 hover:text-pink-700"
-          >
-            ✖
-          </button>
+
+          <div className="flex items-center gap-3">
+            {/* 🚫 Clear All icon (only shows if filters applied) */}
+            {hasActiveFilters && (
+              <button
+                onClick={handleReset}
+                className="text-lg hover:scale-110 transition"
+                title="Clear All Filters"
+              >
+                🚫
+              </button>
+            )}
+
+            <button
+              onClick={onClose}
+              className="text-xl font-bold text-pink-500 hover:text-pink-700"
+              title="Close"
+            >
+              ✖
+            </button>
+          </div>
         </div>
 
         {/* Filter Options */}
@@ -64,10 +82,15 @@ function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
             if (values.length === 0) return null;
             return (
               <div key={field.key}>
-                <h3 className="font-semibold text-blue-400 mb-2">{field.label}</h3>
+                <h3 className="font-semibold text-blue-400 mb-2">
+                  {field.label}
+                </h3>
                 <div className="flex flex-col gap-2">
                   {values.map((val) => (
-                    <label key={val} className="flex items-center gap-2 cursor-pointer">
+                    <label
+                      key={val}
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
                       <input
                         type="checkbox"
                         checked={filters[field.key]?.includes(val) || false}
@@ -81,17 +104,17 @@ function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
             );
           })}
 
-          {/* ✅ Reset Button */}
+          {/* ✅ Reset Button at Bottom */}
           <div className="pt-6">
             <button
               onClick={handleReset}
               className={`w-full py-2 rounded font-semibold transition ${
                 theme === "dark"
-                  ? "bg-[#007FFF] text-white hover:bg-[#3399FF]" // azure blue
+                  ? "bg-[#007FFF] text-white hover:bg-[#3399FF]"
                   : "bg-[#007FFF] text-black hover:bg-[#66B2FF]"
               }`}
             >
-              Reset Filters
+              Reset Filters 🔁
             </button>
           </div>
         </div>
