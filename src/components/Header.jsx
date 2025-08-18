@@ -16,12 +16,13 @@ function Header({
   onOpenSummary,
   totalBugs,
   onOpenFilters,
-  filters,       
-  setFilters     
+  filters,
+  setFilters
 }) {
-  const hasActiveFilters = Object.values(filters).some(
-    (arr) => arr && arr.length > 0
-  );
+  // ✅ Prevent error if filters is null/undefined
+  const hasActiveFilters = filters
+    ? Object.values(filters).some((arr) => arr && arr.length > 0)
+    : false;
 
   const handleResetFilters = () => {
     setFilters({});
@@ -126,7 +127,7 @@ function Header({
           Generate Summary 📊
         </button>
         
-        {/* Filters Button */}
+        {/* Filters Button + 🚫 Reset */}
         <div className="flex items-center gap-2">
           <button
             onClick={onOpenFilters}
@@ -135,16 +136,21 @@ function Header({
             Filters ⚙️
           </button>
 
-          {/* 🚫 Clear Filters only if active */}
-          {hasActiveFilters && (
-            <button
-              onClick={handleResetFilters}
-              className={'text-xl hover:scale-125 transition drop-shadow-[0_0_8px_#f00] animate-pulse ${theme === "dark"? "text-red-400 hover:text-red-300":"text-blue-600 hover:text-blue 500"}'}
-              title="Clear All Filters"
-            >
-              🚫
-            </button>
-          )}
+          {/* 🚫 Clear Filters (fade-in when active) */}
+          <button
+            onClick={handleResetFilters}
+            className={`text-xl transition-all duration-500 transform 
+              drop-shadow-[0_0_8px_#f00] 
+              ${hasActiveFilters 
+                ? `opacity-100 scale-100 ${theme === "dark"
+                    ? "text-red-400 hover:text-red-300"
+                    : "text-blue-600 hover:text-blue-500"}`
+                : "opacity-0 scale-75 pointer-events-none"
+              }`}
+            title="Clear All Filters"
+          >
+            🚫
+          </button>
         </div>
 
         {/* Search */}
