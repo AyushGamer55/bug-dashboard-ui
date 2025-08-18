@@ -194,6 +194,24 @@ export const useBugLogic = () => {
       setBugs(previousBugs);
     }
   };
+  const handleOpenFilters = () => {
+    if (bugs.length === 0) {
+      toast.warning("⚠️ No data available to filter!", {
+        position: "top-right",autoClose: 3000,hideProgressBar: false,closeOnClick: true,pauseOnHover: true,draggable: true,progress: undefined,theme: theme === "dark" ? "dark" : "light",
+      style: {
+        background: theme === "dark"
+          ? "linear-gradient(90deg, #0f0c29, #302b63, #24243e)"
+          : "linear-gradient(90deg, #f9f9f9, #e0e0ff)",
+        color: theme === "dark" ? "#00fff7" : "#000",
+        fontWeight: "bold",
+        border: theme === "dark" ? "1px solid #00fff7" : "1px solid #555",
+        textShadow: theme === "dark" ? "0 0 8px #00fff7" : "none",
+      },
+    });
+    return;
+  }
+  setShowFilters(true);
+};
 
   return {
     bugs, editMode, search, loading, showAddForm, newBug,
