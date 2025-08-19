@@ -205,7 +205,7 @@ body:not(.light-mode) .Toastify__toast {
 
 /* Light mode neon style */
 body.light-mode .Toastify__toast {
-  background: linear-gradient(90deg, #ffd700, #006d5b); 
+  background: linear-gradient(90deg, #ffd700, #2d313a); 
   color: #463671; 
   border: 1px solid #9d4edd; 
   text-shadow: 0 0 8px rgba(148, 80, 242, 0.6);
