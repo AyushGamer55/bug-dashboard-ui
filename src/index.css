@@ -203,13 +203,13 @@ body:not(.light-mode) .Toastify__toast {
   box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
 }
 
-/* Light mode — White + Neon Blue */
+/* Light mode neon style */
 body.light-mode .Toastify__toast {
-  background: linear-gradient(90deg, #ffffff, #dff6ff);
-  color: #000;
-  border: 1px solid #007FFF;
-  text-shadow: 0 0 4px rgba(0, 127, 255, 0.6);
-  box-shadow: 0 0 12px rgba(0, 127, 255, 0.7);
+  background: linear-gradient(90deg, #ffffff, #e9d5ff); 
+  color: #3b0764; /* deep purple text */
+  border: 1px solid #ff00cc; 
+  text-shadow: 0 0 6px rgba(255, 0, 204, 0.7);
+  box-shadow: 0 0 15px rgba(255, 0, 204, 0.5);
 }
 
 /* Success */
