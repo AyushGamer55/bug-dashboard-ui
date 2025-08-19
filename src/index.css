@@ -205,11 +205,11 @@ body:not(.light-mode) .Toastify__toast {
 
 /* Light mode neon style */
 body.light-mode .Toastify__toast {
-  background: linear-gradient(90deg, #000000, #e9d5ff); 
-  color: #2d004d; 
-  border: 1px solid #ff00cc; 
-  text-shadow: 0 0 6px rgba(255, 0, 204, 0.6);
-  box-shadow: 0 0 15px rgba(255, 0, 204, 0.4);
+  background: linear-gradient(90deg, #000000, #4b0082); 
+  color: #e0b3ff; 
+  border: 1px solid #9d4edd; 
+  text-shadow: 0 0 8px #9d4edd;
+  box-shadow: 0 0 15px rgba(157, 78, 221, 0.6);
 }
 
 /* Success */
