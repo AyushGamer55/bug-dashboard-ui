@@ -1,4 +1,3 @@
-// src/App.jsx
 import React, { useState, useEffect } from "react";
 import { useBugLogic } from "./hooks/useBugLogic";
 import Header from "./components/Header";
@@ -28,32 +27,22 @@ function App() {
     exportJSON,
     handleDelete,
     handleUpdate,
-    handleOpenFilters, 
+    handleOpenFilters,
   } = useBugLogic();
 
   const [theme, setTheme] = useState("dark");
   const [showIntro, setShowIntro] = useState(true);
-
-  // Summary modal states
   const [showSummary, setShowSummary] = useState(false);
   const [summaryData, setSummaryData] = useState(null);
   const [summaryMode, setSummaryMode] = useState("text");
-
-  // 🔹 Filters data (active filters applied)
   const [filters, setFilters] = useState({});
 
-  // Apply theme to body
   useEffect(() => {
     document.body.className = theme === "light" ? "light-mode" : "";
   }, [theme]);
 
-  // Check intro video state
   useEffect(() => {
-    if (sessionStorage.getItem("introPlayed") === "true") {
-      setShowIntro(false);
-    } else {
-      setShowIntro(true);
-    }
+    if (sessionStorage.getItem("introPlayed") === "true") setShowIntro(false);
   }, []);
 
   const handleIntroFinish = () => {
@@ -61,39 +50,24 @@ function App() {
     setShowIntro(false);
   };
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-  };
+  const toggleTheme = () => setTheme(prev => prev === "dark" ? "light" : "dark");
 
-  // Apply search + filters
-  const filteredBugs = bugs.filter((bug) => {
+  const filteredBugs = bugs.filter(bug => {
     const query = search.trim().toLowerCase();
-    const matchesSearch = Object.values(bug).some((value) =>
-      (value || "").toString().toLowerCase().includes(query)
-    );
-
-    const matchesFilters = Object.entries(filters).every(([key, values]) => {
-      if (!values || values.length === 0) return true;
-      return values.includes(bug[key]);
-    });
-
+    const matchesSearch = Object.values(bug).some(v => (v || '').toString().toLowerCase().includes(query));
+    const matchesFilters = Object.entries(filters).every(([k, vals]) => !vals?.length || vals.includes(bug[k]));
     return matchesSearch && matchesFilters;
   });
 
   const handleOpenSummary = async () => {
-    if (bugs.length === 0) {
-      alert("❌ No bugs available to summarize!");
-      return;
-    }
+    if (!bugs.length) return alert("❌ No bugs available to summarize!");
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/bugs/summary`);
       if (!res.ok) throw new Error("Failed to fetch summary");
-      const data = await res.json();
-      setSummaryData(data);
+      setSummaryData(await res.json());
       setSummaryMode("text");
       setShowSummary(true);
-    } catch (err) {
-      console.error(err);
+    } catch {
       alert("❌ Failed to load summary report.");
     }
   };
@@ -117,32 +91,21 @@ function App() {
             theme={theme}
             onOpenSummary={handleOpenSummary}
             totalBugs={bugs.length}
-            onOpenFilters={handleOpenFilters} // ✅ fixed
+            onOpenFilters={handleOpenFilters}
           />
 
-          {loading && (
-            <div className="text-center text-blue-600 font-semibold animate-pulse mt-2">
-              Loading...
-            </div>
-          )}
+          {loading && <div className="text-center text-blue-600 animate-pulse font-semibold mt-2">Loading...</div>}
 
-          {showAddForm && (
-            <AddBugForm
-              newBug={newBug}
-              setNewBug={setNewBug}
-              handleAddBug={handleAddBug}
-            />
-          )}
+          {showAddForm && <AddBugForm newBug={newBug} setNewBug={setNewBug} handleAddBug={handleAddBug} />}
 
           <BugList
             bugs={filteredBugs}
             editMode={editMode}
             handleDelete={handleDelete}
             handleUpdate={handleUpdate}
-            onToggleEdit={() => setEditMode((prev) => !prev)}
+            onToggleEdit={() => setEditMode(prev => !prev)}
           />
 
-          {/* Summary Modal */}
           <SummaryModal
             open={showSummary}
             onClose={() => setShowSummary(false)}
@@ -151,7 +114,6 @@ function App() {
             setMode={setSummaryMode}
           />
 
-          {/* 🔹 Filter Modal */}
           <FilterModal
             open={showFilters}
             onClose={() => setShowFilters(false)}
