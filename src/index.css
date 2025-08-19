@@ -215,7 +215,7 @@ body.light-mode .Toastify__toast {
     0 0 10px rgba(255, 215, 0, 0.8),  /* gold glow */
     0 0 15px rgba(192, 192, 192, 0.6); /* silver glow */
   background-size: 200% 200%;
-  animation: shine 3s linear infinite;
+  animation: shine 3s linear;
 }
 
 /* Create a moving shine effect */
