@@ -6,6 +6,13 @@ import { isValidBug } from '../utils/bugUtils';
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
+// Generate unique deviceId per device
+let deviceId = localStorage.getItem('deviceId');
+if (!deviceId) {
+  deviceId = crypto.randomUUID();
+  localStorage.setItem('deviceId', deviceId);
+}
+
 const sortByScenario = (arr) =>
   [...arr].sort((a, b) => String(a.ScenarioID || '').localeCompare(String(b.ScenarioID || '')));
 
@@ -27,26 +34,20 @@ export const useBugLogic = () => {
   const justUploadedRef = useRef(false);
   const firstLoadRef = useRef(true);
 
+  // Fetch all bugs for this device
   useEffect(() => {
-    if (!API_BASE) {
-      console.error('VITE_API_URL is missing.');
-      toast.error('Backend URL not configured (VITE_API_URL).');
-      return;
-    }
+    if (!API_BASE) return;
 
     const fetchData = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${API_BASE}/bugs`);
+        const res = await fetch(`${API_BASE}/bugs?deviceId=${deviceId}`);
         if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
         const data = await res.json();
         setBugs(sortByScenario(data));
 
-        if (justUploadedRef.current) {
-          justUploadedRef.current = false;
-        } else if (!firstLoadRef.current) {
-          toast.info('🔄 Page refreshed successfully');
-        }
+        if (justUploadedRef.current) justUploadedRef.current = false;
+        else if (!firstLoadRef.current) toast.info('🔄 Page refreshed successfully');
 
         firstLoadRef.current = false;
       } catch (err) {
@@ -60,20 +61,17 @@ export const useBugLogic = () => {
     fetchData();
   }, []);
 
+  // File upload handler
   const handleFile = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     const reader = new FileReader();
 
     const processUpload = async (data) => {
       try {
-        // Normalize CSV strings (trim) and ensure objects
         const cleaned = Array.isArray(data)
           ? data.map((row) =>
-              Object.fromEntries(
-                Object.entries(row || {}).map(([k, v]) => [k.trim(), typeof v === 'string' ? v.trim() : v])
-              )
+              Object.fromEntries(Object.entries(row || {}).map(([k, v]) => [k.trim(), typeof v === 'string' ? v.trim() : v]))
             )
           : [];
 
@@ -87,14 +85,14 @@ export const useBugLogic = () => {
             fetch(`${API_BASE}/bugs`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(bug),
+              body: JSON.stringify({ ...bug, deviceId }),
             })
           )
         );
 
         justUploadedRef.current = true;
 
-        const res = await fetch(`${API_BASE}/bugs`);
+        const res = await fetch(`${API_BASE}/bugs?deviceId=${deviceId}`);
         const allBugs = await res.json();
         setBugs(sortByScenario(allBugs));
 
@@ -107,12 +105,8 @@ export const useBugLogic = () => {
 
     if (file.name.endsWith('.json')) {
       reader.onload = (ev) => {
-        try {
-          const data = JSON.parse(ev.target.result);
-          processUpload(data);
-        } catch (err) {
-          toast.error('❌ Failed to parse JSON file');
-        }
+        try { processUpload(JSON.parse(ev.target.result)); }
+        catch { toast.error('❌ Failed to parse JSON file'); }
       };
       reader.readAsText(file);
     } else if (file.name.endsWith('.csv')) {
@@ -120,14 +114,9 @@ export const useBugLogic = () => {
         header: true,
         skipEmptyLines: true,
         complete: (results) => processUpload(results.data),
-        error: (err) => {
-          console.error('CSV Error:', err);
-          toast.error('❌ Failed to parse CSV file');
-        },
+        error: (err) => { console.error(err); toast.error('❌ Failed to parse CSV'); },
       });
-    } else {
-      toast.error('❌ Please upload a JSON or CSV file only');
-    }
+    } else toast.error('❌ Please upload a JSON or CSV file only');
   };
 
   const exportJSON = () => exportAsJSON(sortByScenario(bugs));
@@ -135,18 +124,15 @@ export const useBugLogic = () => {
   const resetAll = () => {
     if (!window.confirm('Are you sure you want to delete ALL bugs?')) return;
 
-    fetch(`${API_BASE}/bugs/delete-all`, { method: 'DELETE' })
+    fetch(`${API_BASE}/bugs/delete-all?deviceId=${deviceId}`, { method: 'DELETE' })
       .then(async (res) => {
         if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
         const data = await res.json().catch(() => ({}));
         setBugs([]);
         const removed = typeof data.deletedCount === 'number' ? data.deletedCount : 'all';
-        toast.success(`🧨 All bugs deleted from backend! (${removed} removed)`);
+        toast.success(`🧨 All bugs deleted for this device! (${removed} removed)`);
       })
-      .catch((err) => {
-        console.error('❌ Failed to reset all bugs:', err);
-        toast.error('❌ Failed to reset bugs');
-      });
+      .catch((err) => { console.error(err); toast.error('❌ Failed to reset bugs'); });
   };
 
   const handleAddBug = () => {
@@ -154,12 +140,9 @@ export const useBugLogic = () => {
     fetch(`${API_BASE}/bugs`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newBug),
+      body: JSON.stringify({ ...newBug, deviceId }),
     })
-      .then((res) => {
-        if (!res.ok) throw new Error('Network response was not ok');
-        return res.json();
-      })
+      .then(res => res.json())
       .then((addedBug) => {
         setBugs((prev) => sortByScenario([...prev, addedBug]));
         setNewBug({
@@ -170,31 +153,25 @@ export const useBugLogic = () => {
         setShowAddForm(false);
         toast.success('✅ Bug added successfully!');
       })
-      .catch((err) => {
-        console.error('Failed to add bug:', err);
-        toast.error('❌ Failed to add bug');
-      })
+      .catch(err => { console.error(err); toast.error('❌ Failed to add bug'); })
       .finally(() => setLoading(false));
   };
 
   const handleDelete = (id) => {
     setLoading(true);
-    fetch(`${API_BASE}/bugs/${id}`, { method: 'DELETE' })
-      .then((res) => {
-        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-        setBugs((prev) => sortByScenario(prev.filter((bug) => bug._id !== id)));
+    fetch(`${API_BASE}/bugs/${id}?deviceId=${deviceId}`, { method: 'DELETE' })
+      .then(res => {
+        if (!res.ok) throw new Error('Delete failed');
+        setBugs(prev => sortByScenario(prev.filter(bug => bug._id !== id)));
         toast.success('🗑️ Bug deleted!');
       })
-      .catch((err) => {
-        console.error('Failed to delete bug:', err);
-        toast.error('❌ Failed to delete bug.');
-      })
+      .catch(err => { console.error(err); toast.error('❌ Failed to delete bug'); })
       .finally(() => setLoading(false));
   };
 
   const handleUpdate = async (id, updatedFields) => {
     const previousBugs = [...bugs];
-    setBugs((prev) => prev.map((bug) => (bug._id === id ? { ...bug, ...updatedFields } : bug)));
+    setBugs(prev => prev.map(bug => bug._id === id ? { ...bug, ...updatedFields } : bug));
 
     try {
       const res = await fetch(`${API_BASE}/bugs/${id}`, {
@@ -203,13 +180,10 @@ export const useBugLogic = () => {
         body: JSON.stringify(updatedFields),
       });
 
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Failed to update bug: ${res.status} ${res.statusText} - ${errorText}`);
-      }
+      if (!res.ok) throw new Error('Failed to update bug');
 
       const updatedBug = await res.json();
-      setBugs((prev) => sortByScenario(prev.map((bug) => (bug._id === id ? updatedBug : bug))));
+      setBugs(prev => sortByScenario(prev.map(bug => bug._id === id ? updatedBug : bug)));
       toast.success('✅ Bug updated successfully!');
     } catch (err) {
       console.error('Update failed:', err);
@@ -218,7 +192,6 @@ export const useBugLogic = () => {
     }
   };
 
-  // NEW: safe, self-contained filter opener (no external theme dependency)
   const handleOpenFilters = () => {
     if (bugs.length === 0) {
       toast.warning('⚠️ No data available to filter!');
