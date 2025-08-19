@@ -215,14 +215,6 @@ body.light-mode .Toastify__toast {
     0 0 10px rgba(255, 215, 0, 0.8),  
     0 0 15px rgba(192, 192, 192, 0.6); 
   background-size: 200% 200%;
-  animation: shine 3s ease forwards;
-}
-
-/* Create a moving shine effect */
-@keyframes shine {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
 }
 
 /* Success */
