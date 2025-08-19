@@ -5,35 +5,24 @@ const API_BASE = import.meta.env.VITE_API_URL;
 
 function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
   const [savingField, setSavingField] = useState(null);
-  const [isLightMode, setIsLightMode] = useState(
-    document.body.classList.contains('light-mode')
-  );
+  const [isLightMode, setIsLightMode] = useState(document.body.classList.contains('light-mode'));
 
-  // Listen for mode changes dynamically
   useEffect(() => {
     const observer = new MutationObserver(() => {
       setIsLightMode(document.body.classList.contains('light-mode'));
     });
-
     observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-
     return () => observer.disconnect();
   }, []);
 
   const field = (label, key, value) => (
     <div className="mb-4">
-      <label
-        className={`block font-semibold mb-1 ${
-          isLightMode ? 'text-gray-800' : 'text-cyan-300'
-        }`}
-      >
+      <label className={`block font-semibold mb-1 ${isLightMode ? 'text-gray-800' : 'text-cyan-300'}`}>
         {label}
       </label>
       <div
         className={`w-full px-3 py-2 rounded border transition-all duration-300 ${
-          isLightMode
-            ? 'bg-white border-gray-400 text-black'
-            : 'bg-black bg-opacity-50 border-cyan-600 text-white'
+          isLightMode ? 'bg-white border-gray-400 text-black' : 'bg-black bg-opacity-50 border-cyan-600 text-white'
         } ${editMode ? 'hover:shadow-cyan focus:outline-none cursor-text' : ''}`}
         contentEditable={editMode}
         suppressContentEditableWarning={true}
@@ -49,33 +38,26 @@ function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
               body: JSON.stringify({ [key]: newValue })
             })
               .then((res) => res.json())
-              .then(() => {
-                onUpdate?.({ [key]: newValue });
-              })
-              .catch(() => {
-                toast.error('❌ Update failed');
-              })
+              .then(() => onUpdate?.({ [key]: newValue }))
+              .catch(() => toast.error('❌ Update failed'))
               .finally(() => setSavingField(null));
           }
         }}
       >
         {value}
       </div>
-      {savingField === key && (
-        <span className="text-sm text-blue-400 animate-pulse">Saving...</span>
-      )}
+      {savingField === key && <span className="text-sm text-blue-400 animate-pulse">Saving...</span>}
     </div>
   );
 
   return (
     <div
-      className={`rounded-lg p-6 shadow-xl border relative transition-transform hover:scale-[1.02] duration-300
-      ${isLightMode
-        ? 'bg-white border-gray-300 text-black'
-        : 'bg-gradient-to-br from-black via-gray-900 to-gray-800 border-cyan-700 text-white'
+      className={`rounded-lg p-6 shadow-xl border relative transition-transform hover:scale-[1.02] duration-300 ${
+        isLightMode
+          ? 'bg-white border-gray-300 text-black'
+          : 'bg-gradient-to-br from-black via-gray-900 to-gray-800 border-cyan-700 text-white'
       }`}
     >
-      {/* Edit Button */}
       <button
         onClick={onToggleEdit}
         className={`absolute top-3 right-20 px-3 py-1 text-xs font-bold rounded-full shadow-lg transition duration-200 ${
@@ -87,7 +69,6 @@ function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
         {editMode ? 'Editing' : 'Edit'}
       </button>
 
-      {/* Delete Button */}
       <button
         onClick={onDelete}
         className="absolute top-3 right-3 px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-full shadow-lg transition duration-200"
