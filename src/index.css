@@ -197,7 +197,7 @@ body.light-mode .bug-card:hover {
 /* Dark mode neon style */
 body:not(.light-mode) .Toastify__toast {
   background: linear-gradient(90deg, #0f0c29, #302b63, #24243e);
-  color: #00fff7;
+  color: #9d00ff;
   border: 1px solid #00fff7;
   text-shadow: 0 0 6px rgba(0, 255, 255, 0.8);
   box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
