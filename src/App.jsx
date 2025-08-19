@@ -37,10 +37,12 @@ function App() {
   const [summaryMode, setSummaryMode] = useState("text");
   const [filters, setFilters] = useState({});
 
+  // Apply theme to body
   useEffect(() => {
     document.body.className = theme === "light" ? "light-mode" : "";
   }, [theme]);
 
+  // Check if intro video already played
   useEffect(() => {
     if (sessionStorage.getItem("introPlayed") === "true") setShowIntro(false);
   }, []);
@@ -52,10 +54,15 @@ function App() {
 
   const toggleTheme = () => setTheme(prev => prev === "dark" ? "light" : "dark");
 
+  // Filter + search
   const filteredBugs = bugs.filter(bug => {
     const query = search.trim().toLowerCase();
-    const matchesSearch = Object.values(bug).some(v => (v || '').toString().toLowerCase().includes(query));
-    const matchesFilters = Object.entries(filters).every(([k, vals]) => !vals?.length || vals.includes(bug[k]));
+    const matchesSearch = Object.values(bug).some(v =>
+      (v || '').toString().toLowerCase().includes(query)
+    );
+    const matchesFilters = Object.entries(filters).every(([k, vals]) =>
+      !vals?.length || vals.includes(bug[k])
+    );
     return matchesSearch && matchesFilters;
   });
 
@@ -94,9 +101,19 @@ function App() {
             onOpenFilters={handleOpenFilters}
           />
 
-          {loading && <div className="text-center text-blue-600 animate-pulse font-semibold mt-2">Loading...</div>}
+          {loading && (
+            <div className="text-center text-blue-600 animate-pulse font-semibold mt-2">
+              Loading...
+            </div>
+          )}
 
-          {showAddForm && <AddBugForm newBug={newBug} setNewBug={setNewBug} handleAddBug={handleAddBug} />}
+          {showAddForm && (
+            <AddBugForm
+              newBug={newBug} // ✅ deviceId handled automatically in hook
+              setNewBug={setNewBug}
+              handleAddBug={handleAddBug}
+            />
+          )}
 
           <BugList
             bugs={filteredBugs}
