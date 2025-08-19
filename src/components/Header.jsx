@@ -71,7 +71,7 @@ function Header({
           htmlFor="file-upload"
           className="btn bg-cyan-500 text-black hover:bg-cyan-400 cursor-pointer"
         >
-          Upload File
+          Upload File 📁
         </label>
         <input
           id="file-upload"
