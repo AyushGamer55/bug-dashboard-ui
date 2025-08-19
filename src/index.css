@@ -205,11 +205,24 @@ body:not(.light-mode) .Toastify__toast {
 
 /* Light mode neon style */
 body.light-mode .Toastify__toast {
-  background: linear-gradient(90deg, #ffd700, #2d313a); 
-  color: #463671; 
-  border: 1px solid #9d4edd; 
-  text-shadow: 0 0 8px rgba(148, 80, 242, 0.6);
-  box-shadow: 0 0 15px rgba(157, 78, 221, 0.4);
+  background: 
+    linear-gradient(135deg, #ffd700 0%, #fff700 25%, #c0c0c0 50%, #e0e0e0 75%, #ffd700 100%);
+  color: #463671;
+  border: 1px solid #9d4edd;
+  border-radius: 8px;
+  text-shadow: 0 0 6px rgba(148, 88, 242, 0.7);
+  box-shadow: 
+    0 0 10px rgba(255, 215, 0, 0.8),  /* gold glow */
+    0 0 15px rgba(192, 192, 192, 0.6); /* silver glow */
+  background-size: 200% 200%;
+  animation: shine 3s linear infinite;
+}
+
+/* Create a moving shine effect */
+@keyframes shine {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* Success */
