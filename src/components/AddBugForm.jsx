@@ -1,32 +1,34 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
 function AddBugForm({ newBug, setNewBug, handleAddBug }) {
-  const [showHint, setShowHint] = useState(false)
+  const [showHint, setShowHint] = useState(false);
 
   const handleClick = () => {
-    const hasValue = Object.values(newBug).some(v => v && v.trim() !== "")
+    const hasValue = Object.values(newBug).some(v => v && v.trim() !== '');
     if (!hasValue) {
-      setShowHint(true)
-      return
+      setShowHint(true);
+      return;
     }
-    setShowHint(false)
-    handleAddBug()
-  }
+    setShowHint(false);
+    handleAddBug();
+  };
 
   return (
     <div className="bg-black shadow-md p-4 mt-4 rounded border border-blue-300">
       <h2 className="text-lg font-semibold mb-2 text-blue-600">➕ Add New Scenario</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-        {Object.keys(newBug).map((key) => (
-          <input
-            key={key}
-            type="text"
-            placeholder={key}
-            value={newBug[key]}
-            onChange={(e) => setNewBug({ ...newBug, [key]: e.target.value })}
-            className="p-2 rounded bg-transparent border border-cyan-500 text-white text-sm"
-          />
-        ))}
+        {Object.keys(newBug)
+          .filter(key => key !== 'deviceId') // hide deviceId from form
+          .map(key => (
+            <input
+              key={key}
+              type="text"
+              placeholder={key}
+              value={newBug[key]}
+              onChange={(e) => setNewBug({ ...newBug, [key]: e.target.value })}
+              className="p-2 rounded bg-transparent border border-cyan-500 text-white text-sm"
+            />
+          ))}
       </div>
       <button
         onClick={handleClick}
@@ -40,7 +42,7 @@ function AddBugForm({ newBug, setNewBug, handleAddBug }) {
         </p>
       )}
     </div>
-  )
+  );
 }
 
-export default AddBugForm
+export default AddBugForm;
