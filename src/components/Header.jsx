@@ -69,7 +69,7 @@ function Header({
             Bug Report Dashboard
           </h1>
 
-          <p className="text-sm text-purple-300 italic">
+          <p className="text-sm text-red-800 italic">
             Upload, edit, add, delete and export your bug reports efficiently
           </p>
         </div>
