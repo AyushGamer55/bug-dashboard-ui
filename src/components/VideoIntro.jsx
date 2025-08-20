@@ -60,10 +60,11 @@ export default function VideoIntro({ onFinish }) {
           onClick={enableSound}
           className="absolute bottom-12 right-5 bg-white/20 text-white px-3 py-1 rounded backdrop-blur-sm hover:bg-white/40 transition"
         >
-          🔇Muted
+          🔇 Muted
         </button>
       )}
     </div>
   );
 }
+
 
