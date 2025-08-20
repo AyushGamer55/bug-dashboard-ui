@@ -70,7 +70,7 @@ function Header({
           </h1>
 
           <p className="text-sm text-red-600 italic">
-            Upload, edit, add, delete and export your bug reports efficiently
+            View bug reports, upload new ones, edit, delete, generate summaries, and manage everything efficiently.
           </p>
         </div>
       </div>
