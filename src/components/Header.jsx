@@ -1,11 +1,11 @@
-// src/components/Header.jsx
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import logo from "../assets/logo.png";
 
 function Header({
   onFile,
   toggleEdit,
   exportJSON,
+  exportCSV,
   resetAll,
   toggleAddForm,
   editMode,
@@ -19,6 +19,20 @@ function Header({
   sortField,
   setSortField,
 }) {
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const exportRef = useRef(null);
+
+  // Close dropdown if clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (exportRef.current && !exportRef.current.contains(e.target)) {
+        setShowExportMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <div className="relative flex flex-col md:flex-row justify-between items-center gap-4 mb-6 p-6 shadow-lg">
       {/* Top Right Controls */}
@@ -60,17 +74,18 @@ function Header({
         <div>
           <h1
             className={`text-5xl md:text-6xl sm:text-5xl font-bold tracking-wider animate-pulse
-    ${
-      theme === "dark"
-        ? "text-cyan-400 drop-shadow-[0_0_10px_#0ff]"
-        : "text-purple-700 drop-shadow-[0_0_6px_#a78bfa]"
-    }`}
+              ${
+                theme === "dark"
+                  ? "text-cyan-400 drop-shadow-[0_0_10px_#0ff]"
+                  : "text-purple-700 drop-shadow-[0_0_6px_#a78bfa]"
+              }`}
           >
             Bug Report Dashboard
           </h1>
 
           <p className="text-sm text-red-600 italic">
-            View bug reports, upload new ones, edit, delete, generate summaries, and manage everything efficiently.
+            View bug reports, upload new ones, edit, delete, generate summaries,
+            and manage everything efficiently.
           </p>
         </div>
       </div>
@@ -97,12 +112,44 @@ function Header({
           {editMode ? "Disable Edit 🔒" : "Enable Edit ✏️"}
         </button>
 
-        <button
-          onClick={exportJSON}
-          className="btn bg-green-400 text-black hover:bg-green-300"
-        >
-          Export 💾
-        </button>
+        {/* Export Dropdown */}
+        <div className="relative" ref={exportRef}>
+          <button
+            onClick={() => setShowExportMenu((prev) => !prev)}
+            className="btn bg-green-400 text-black hover:bg-green-300"
+          >
+            Export 💾
+          </button>
+
+          {showExportMenu && (
+            <div
+              className={`absolute mt-2 w-44 rounded shadow-lg border z-20 ${
+                theme === "dark"
+                  ? "bg-[#1c1c2a] text-cyan-200 border-cyan-500"
+                  : "bg-white text-black border-gray-400"
+              }`}
+            >
+              <button
+                onClick={() => {
+                  exportJSON();
+                  setShowExportMenu(false);
+                }}
+                className="block w-full text-left px-4 py-2 hover:bg-green-500 hover:text-black"
+              >
+                📄 Export as JSON
+              </button>
+              <button
+                onClick={() => {
+                  exportCSV();
+                  setShowExportMenu(false);
+                }}
+                className="block w-full text-left px-4 py-2 hover:bg-green-500 hover:text-black"
+              >
+                📑 Export as CSV
+              </button>
+            </div>
+          )}
+        </div>
 
         <button
           onClick={resetAll}
@@ -146,7 +193,7 @@ function Header({
             }`}
         />
 
-        {/* Sort Dropdown with placeholder */}
+        {/* Sort Dropdown */}
         <select
           value={sortField}
           onChange={(e) => setSortField(e.target.value)}

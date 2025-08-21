@@ -26,6 +26,7 @@ function App() {
     handleAddBug,
     resetAll,
     exportJSON,
+    exportCSV,
     handleDelete,
     handleUpdate,
     handleOpenFilters,
@@ -56,19 +57,20 @@ function App() {
     setShowIntro(false);
   };
 
-  const toggleTheme = () => setTheme(prev => (prev === "dark" ? "light" : "dark"));
+  const toggleTheme = () =>
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
 
   // 🔹 Filtered Bugs
-  const filteredBugs = bugs.filter(bug => {
+  const filteredBugs = bugs.filter((bug) => {
     const query = search.trim().toLowerCase();
-    const matchesSearch = Object.values(bug).some(val =>
+    const matchesSearch = Object.values(bug).some((val) =>
       (val || "").toString().toLowerCase().includes(query)
     );
 
     const matchesFilters = Object.entries(filters).every(([key, values]) => {
       if (!values || values.length === 0) return true;
       const bugValue = normalizeValue(key, bug[key]);
-      return values.some(val => normalizeValue(key, val) === bugValue);
+      return values.some((val) => normalizeValue(key, val) === bugValue);
     });
 
     return matchesSearch && matchesFilters;
@@ -105,6 +107,7 @@ function App() {
             onFile={handleFile}
             toggleEdit={() => setEditMode(!editMode)}
             exportJSON={exportJSON}
+            exportCSV={exportCSV}
             resetAll={resetAll}
             toggleAddForm={() => setShowAddForm(!showAddForm)}
             editMode={editMode}
@@ -121,20 +124,43 @@ function App() {
             setSortOrder={setSortOrder}
           />
 
-          {loading && <div className="text-center text-blue-600 font-semibold animate-pulse mt-2">Loading...</div>}
+          {loading && (
+            <div className="text-center text-blue-600 font-semibold animate-pulse mt-2">
+              Loading...
+            </div>
+          )}
 
-          {showAddForm && <AddBugForm newBug={newBug} setNewBug={setNewBug} handleAddBug={handleAddBug} />}
+          {showAddForm && (
+            <AddBugForm
+              newBug={newBug}
+              setNewBug={setNewBug}
+              handleAddBug={handleAddBug}
+            />
+          )}
 
           <BugList
             bugs={sortedBugs}
             editMode={editMode}
             handleDelete={handleDelete}
             handleUpdate={handleUpdate}
-            onToggleEdit={() => setEditMode(prev => !prev)}
+            onToggleEdit={() => setEditMode((prev) => !prev)}
           />
 
-          <SummaryModal open={showSummary} onClose={() => setShowSummary(false)} summary={summaryData} mode={summaryMode} setMode={setSummaryMode} />
-          <FilterModal open={showFilters} onClose={() => setShowFilters(false)} bugs={bugs} filters={filters} setFilters={setFilters} theme={theme} />
+          <SummaryModal
+            open={showSummary}
+            onClose={() => setShowSummary(false)}
+            summary={summaryData}
+            mode={summaryMode}
+            setMode={setSummaryMode}
+          />
+          <FilterModal
+            open={showFilters}
+            onClose={() => setShowFilters(false)}
+            bugs={bugs}
+            filters={filters}
+            setFilters={setFilters}
+            theme={theme}
+          />
         </>
       )}
     </div>
