@@ -9,7 +9,15 @@ function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
     document.body.classList.contains('light-mode')
   );
   const [editingField, setEditingField] = useState({});
+  const [fieldValues, setFieldValues] = useState({});
   const [tooltipField, setTooltipField] = useState(null);
+
+  // sync bug props into state
+  useEffect(() => {
+    if (bug) {
+      setFieldValues(bug);
+    }
+  }, [bug]);
 
   // Listen for mode changes dynamically
   useEffect(() => {
@@ -32,13 +40,17 @@ function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
 
     if (newValue !== bug[key]) {
       setSavingField(key);
+
       fetch(`${API_BASE}/bugs/${bug._id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ [key]: newValue })
       })
         .then((res) => res.json())
-        .then(() => onUpdate?.({ [key]: newValue }))
+        .then(() => {
+          setFieldValues({ ...fieldValues, [key]: newValue });
+          onUpdate?.({ [key]: newValue });
+        })
         .catch(() => toast.error('❌ Update failed'))
         .finally(() => setSavingField(null));
     }
@@ -54,7 +66,7 @@ function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
     'SuggestionToFix'
   ].includes(key);
 
-  const field = (label, key, value) => (
+  const field = (label, key) => (
     <div className="mb-4 relative">
       <label className={`block font-semibold mb-1 ${isLightMode ? 'text-gray-800' : 'text-cyan-300'}`}>
         {label}
@@ -70,7 +82,8 @@ function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
                 ? 'bg-white border-gray-400 text-black'
                 : 'bg-black bg-opacity-50 border-cyan-600 text-white'
             }`}
-            defaultValue={value}
+            value={fieldValues[key] ?? ''}
+            onChange={(e) => setFieldValues({ ...fieldValues, [key]: e.target.value })}
             onBlur={(e) => handleBlur(key, e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) e.target.blur(); }}
           />
@@ -82,7 +95,8 @@ function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
                 ? 'bg-white border-gray-400 text-black'
                 : 'bg-black bg-opacity-50 border-cyan-600 text-white'
             }`}
-            defaultValue={value}
+            value={fieldValues[key] ?? ''}
+            onChange={(e) => setFieldValues({ ...fieldValues, [key]: e.target.value })}
             onBlur={(e) => handleBlur(key, e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') e.target.blur(); }}
           />
@@ -99,7 +113,7 @@ function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
             showTooltip(key);
           }}
         >
-          {value}
+          {fieldValues[key] ?? '—'}
         </div>
       )}
 
@@ -144,18 +158,18 @@ function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
       </button>
 
       <div className="grid md:grid-cols-2 gap-x-6">
-        {field('Scenario ID', 'ScenarioID', bug.ScenarioID)}
-        {field('Category', 'TestCaseID', bug.TestCaseID)}
-        {field('Description', 'Description', bug.Description)}
-        {field('Status', 'Status', bug.Status)}
-        {field('Priority', 'Priority', bug.Priority)}
-        {field('Severity', 'Severity', bug.Severity)}
-        {field('Pre-Condition', 'PreCondition', bug.PreCondition)}
-        {field('Steps To Execute', 'StepsToExecute', bug.StepsToExecute)}
-        {field('Expected Result', 'ExpectedResult', bug.ExpectedResult)}
-        {field('Actual Result', 'ActualResult', bug.ActualResult)}
-        {field('Comments', 'Comments', bug.Comments)}
-        {field('Suggestion To Fix', 'SuggestionToFix', bug.SuggestionToFix)}
+        {field('Scenario ID', 'ScenarioID')}
+        {field('Category', 'TestCaseID')}
+        {field('Description', 'Description')}
+        {field('Status', 'Status')}
+        {field('Priority', 'Priority')}
+        {field('Severity', 'Severity')}
+        {field('Pre-Condition', 'PreCondition')}
+        {field('Steps To Execute', 'StepsToExecute')}
+        {field('Expected Result', 'ExpectedResult')}
+        {field('Actual Result', 'ActualResult')}
+        {field('Comments', 'Comments')}
+        {field('Suggestion To Fix', 'SuggestionToFix')}
       </div>
     </div>
   );
