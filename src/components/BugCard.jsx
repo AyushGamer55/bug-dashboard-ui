@@ -44,6 +44,16 @@ function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
     }
   };
 
+  // helper to decide if a field should be textarea
+  const isMultilineField = (key) => [
+    'StepsToExecute',
+    'PreCondition',
+    'ExpectedResult',
+    'ActualResult',
+    'Comments',
+    'SuggestionToFix'
+  ].includes(key);
+
   const field = (label, key, value) => (
     <div className="mb-4 relative">
       <label className={`block font-semibold mb-1 ${isLightMode ? 'text-gray-800' : 'text-cyan-300'}`}>
@@ -51,19 +61,38 @@ function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
       </label>
 
       {editingField[key] || editMode ? (
-        <input
-          autoFocus
-          className={`w-full px-3 py-2 rounded border transition-all duration-300 ${
-            isLightMode ? 'bg-white border-gray-400 text-black' : 'bg-black bg-opacity-50 border-cyan-600 text-white'
-          }`}
-          defaultValue={value}
-          onBlur={(e) => handleBlur(key, e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') e.target.blur(); }}
-        />
+        isMultilineField(key) ? (
+          <textarea
+            autoFocus
+            rows={3}
+            className={`w-full px-3 py-2 rounded border transition-all duration-300 resize-y ${
+              isLightMode
+                ? 'bg-white border-gray-400 text-black'
+                : 'bg-black bg-opacity-50 border-cyan-600 text-white'
+            }`}
+            defaultValue={value}
+            onBlur={(e) => handleBlur(key, e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) e.target.blur(); }}
+          />
+        ) : (
+          <input
+            autoFocus
+            className={`w-full px-3 py-2 rounded border transition-all duration-300 ${
+              isLightMode
+                ? 'bg-white border-gray-400 text-black'
+                : 'bg-black bg-opacity-50 border-cyan-600 text-white'
+            }`}
+            defaultValue={value}
+            onBlur={(e) => handleBlur(key, e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') e.target.blur(); }}
+          />
+        )
       ) : (
         <div
-          className={`w-full px-3 py-2 rounded border transition-all duration-300 ${
-            isLightMode ? 'bg-white border-gray-400 text-black' : 'bg-black bg-opacity-50 border-cyan-600 text-white'
+          className={`w-full px-3 py-2 rounded border transition-all duration-300 whitespace-pre-line ${
+            isLightMode
+              ? 'bg-white border-gray-400 text-black'
+              : 'bg-black bg-opacity-50 border-cyan-600 text-white'
           } hover:cursor-text`}
           onDoubleClick={() => {
             setEditingField({ ...editingField, [key]: true });
