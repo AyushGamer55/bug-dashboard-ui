@@ -11,58 +11,49 @@ function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
   const [editingField, setEditingField] = useState({});
   const [tooltipField, setTooltipField] = useState(null);
 
-  // Detect theme changes dynamically
+  // Listen for mode changes dynamically
   useEffect(() => {
     const observer = new MutationObserver(() => {
       setIsLightMode(document.body.classList.contains('light-mode'));
     });
+
     observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
     return () => observer.disconnect();
   }, []);
 
-  // Tooltip helper
   const showTooltip = (key) => {
     setTooltipField(key);
-    setTimeout(() => setTooltipField(null), 1500);
+    setTimeout(() => setTooltipField(null), 1500); // hide after 1.5s
   };
 
-  // Save updates to backend
   const handleBlur = (key, newValue) => {
     setEditingField({ ...editingField, [key]: false });
 
-    if (newValue !== bug[key]) {
+    // Special case: StepsToExecute (array in schema)
+    let updatedValue = newValue;
+    if (key === 'StepsToExecute') {
+      updatedValue = newValue
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line);
+    }
+
+    if (JSON.stringify(updatedValue) !== JSON.stringify(bug[key])) {
       setSavingField(key);
       fetch(`${API_BASE}/bugs/${bug._id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ [key]: newValue }),
+        body: JSON.stringify({ [key]: updatedValue })
       })
-        .then((res) => {
-          if (!res.ok) throw new Error('Failed to update');
-          return res.json();
-        })
-        .then(() => {
-          onUpdate?.({ ...bug, [key]: newValue });
-          toast.success('✅ Updated successfully');
-        })
+        .then((res) => res.json())
+        .then(() => onUpdate?.({ [key]: updatedValue }))
         .catch(() => toast.error('❌ Update failed'))
         .finally(() => setSavingField(null));
     }
   };
 
-  // Decide which fields should be textarea
-  const isMultilineField = (key) =>
-    [
-      'StepsToExecute',
-      'PreCondition',
-      'ExpectedResult',
-      'ActualResult',
-      'Comments',
-      'SuggestionToFix',
-    ].includes(key);
-
-  // Render field
-  const field = (label, key, value) => (
+  const field = (label, key, value, multiline = false) => (
     <div className="mb-4 relative">
       <label
         className={`block font-semibold mb-1 ${
@@ -73,11 +64,11 @@ function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
       </label>
 
       {editingField[key] || editMode ? (
-        isMultilineField(key) ? (
+        multiline ? (
           <textarea
             autoFocus
-            rows={3}
-            className={`w-full px-3 py-2 rounded border transition-all duration-300 resize-y ${
+            rows={4}
+            className={`w-full px-3 py-2 rounded border transition-all duration-300 ${
               isLightMode
                 ? 'bg-white border-gray-400 text-black'
                 : 'bg-black bg-opacity-50 border-cyan-600 text-white'
@@ -105,17 +96,17 @@ function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
         )
       ) : (
         <div
-          className={`w-full px-3 py-2 rounded border transition-all duration-300 whitespace-pre-line ${
+          className={`w-full px-3 py-2 rounded border transition-all duration-300 ${
             isLightMode
               ? 'bg-white border-gray-400 text-black'
               : 'bg-black bg-opacity-50 border-cyan-600 text-white'
-          } hover:cursor-text`}
+          } hover:cursor-text whitespace-pre-line`}
           onDoubleClick={() => {
             setEditingField({ ...editingField, [key]: true });
             showTooltip(key);
           }}
         >
-          {value || <span className="italic text-gray-400">—</span>}
+          {value}
         </div>
       )}
 
@@ -163,16 +154,23 @@ function BugCard({ bug, editMode, onDelete, onUpdate, onToggleEdit }) {
       <div className="grid md:grid-cols-2 gap-x-6">
         {field('Scenario ID', 'ScenarioID', bug.ScenarioID)}
         {field('Category', 'TestCaseID', bug.TestCaseID)}
-        {field('Description', 'Description', bug.Description)}
+        {field('Description', 'Description', bug.Description, true)}
         {field('Status', 'Status', bug.Status)}
         {field('Priority', 'Priority', bug.Priority)}
         {field('Severity', 'Severity', bug.Severity)}
-        {field('Pre-Condition', 'PreCondition', bug.PreCondition)}
-        {field('Steps To Execute', 'StepsToExecute', bug.StepsToExecute)}
-        {field('Expected Result', 'ExpectedResult', bug.ExpectedResult)}
-        {field('Actual Result', 'ActualResult', bug.ActualResult)}
-        {field('Comments', 'Comments', bug.Comments)}
-        {field('Suggestion To Fix', 'SuggestionToFix', bug.SuggestionToFix)}
+        {field('Pre-Condition', 'PreCondition', bug.PreCondition, true)}
+        {field(
+          'Steps To Execute',
+          'StepsToExecute',
+          Array.isArray(bug.StepsToExecute)
+            ? bug.StepsToExecute.join('\n')
+            : bug.StepsToExecute,
+          true
+        )}
+        {field('Expected Result', 'ExpectedResult', bug.ExpectedResult, true)}
+        {field('Actual Result', 'ActualResult', bug.ActualResult, true)}
+        {field('Comments', 'Comments', bug.Comments, true)}
+        {field('Suggestion To Fix', 'SuggestionToFix', bug.SuggestionToFix, true)}
       </div>
     </div>
   );
