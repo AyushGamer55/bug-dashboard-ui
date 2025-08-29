@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 import logo from "../assets/logo.png";
 
 function Header({
@@ -19,6 +21,8 @@ function Header({
   sortField,
   setSortField,
 }) {
+  const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
   const [showExportMenu, setShowExportMenu] = useState(false);
   const exportRef = useRef(null);
 
@@ -33,21 +37,28 @@ function Header({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   return (
     <div className="relative flex flex-col md:flex-row justify-between items-center gap-4 mb-6 p-6 shadow-lg">
       {/* Top Right Controls */}
       <div className="absolute top-3 right-3 flex items-center gap-4 z-10">
         {/* Total Bugs Counter */}
-        <div
-          className={`px-3 py-1 rounded text-sm font-semibold border transition 
-            ${
-              theme === "dark"
-                ? "bg-black/60 text-cyan-300 border-cyan-500"
-                : "bg-white text-black border-gray-400"
-            }`}
-        >
-          🐞Total Bugs: <span className="font-bold">{totalBugs}</span>
-        </div>
+        {isAuthenticated && (
+          <div
+            className={`px-3 py-1 rounded text-sm font-semibold border transition 
+              ${
+                theme === "dark"
+                  ? "bg-black/60 text-cyan-300 border-cyan-500"
+                  : "bg-white text-black border-gray-400"
+              }`}
+          >
+            🐞 Total Bugs: <span className="font-bold">{totalBugs}</span>
+          </div>
+        )}
 
         {/* Light/Dark Mode Toggle */}
         <button
@@ -62,6 +73,25 @@ function Header({
         >
           {theme === "dark" ? "☀️" : "🌙"}
         </button>
+
+        {/* Auth Links / Logout */}
+        {isAuthenticated ? (
+          <button
+            onClick={handleLogout}
+            className="btn bg-blue-800 text-white hover:bg-blue-600"
+          >
+            Logout 🚪
+          </button>
+        ) : (
+          <div className="flex gap-2">
+            <Link to="/login" className="btn bg-blue-500 text-white hover:bg-blue-400">
+              Login 🔐
+            </Link>
+            <Link to="/register" className="btn bg-green-500 text-white hover:bg-green-400">
+              Register 🔑
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Logo + Title */}
@@ -82,7 +112,6 @@ function Header({
           >
             Bug Report Dashboard
           </h1>
-
           <p className="text-sm text-red-600 italic">
             View bug reports, upload new ones, edit, delete, generate summaries,
             and manage everything efficiently.
@@ -91,129 +120,114 @@ function Header({
       </div>
 
       {/* Buttons + Search + Sort */}
-      <div className="flex flex-wrap items-center gap-3">
-        <label
-          htmlFor="file-upload"
-          className="btn bg-cyan-500 text-black hover:bg-cyan-400 cursor-pointer"
-        >
-          Upload File 📁
-        </label>
-        <input
-          id="file-upload"
-          type="file"
-          onChange={onFile}
-          className="hidden"
-        />
-
-        <button
-          onClick={toggleEdit}
-          className="btn bg-yellow-300 text-black hover:bg-yellow-200"
-        >
-          {editMode ? "Disable Edit 🔒" : "Enable Edit ✏️"}
-        </button>
-
-        {/* Export Dropdown */}
-        <div className="relative" ref={exportRef}>
-          <button
-            onClick={() => setShowExportMenu((prev) => !prev)}
-            className="btn bg-green-400 text-black hover:bg-green-300"
+      {isAuthenticated && (
+        <div className="flex flex-wrap items-center gap-3">
+          <label
+            htmlFor="file-upload"
+            className="btn bg-cyan-500 text-black hover:bg-cyan-400 cursor-pointer"
           >
-            Export 💾
+            Upload File 📁
+          </label>
+          <input id="file-upload" type="file" onChange={onFile} className="hidden" />
+
+          <button
+            onClick={toggleEdit}
+            className="btn bg-yellow-300 text-black hover:bg-yellow-200"
+          >
+            {editMode ? "Disable Edit 🔒" : "Enable Edit ✏️"}
           </button>
 
-          {showExportMenu && (
-            <div
-              className={`absolute mt-2 w-44 rounded shadow-lg border z-20 ${
-                theme === "dark"
-                  ? "bg-[#1c1c2a] text-cyan-200 border-cyan-500"
-                  : "bg-white text-black border-gray-400"
-              }`}
+          {/* Export Dropdown */}
+          <div className="relative" ref={exportRef}>
+            <button
+              onClick={() => setShowExportMenu((prev) => !prev)}
+              className="btn bg-green-400 text-black hover:bg-green-300"
             >
-              <button
-                onClick={() => {
-                  exportJSON();
-                  setShowExportMenu(false);
-                }}
-                className="block w-full text-left px-4 py-2 hover:bg-green-500 hover:text-black"
+              Export 💾
+            </button>
+
+            {showExportMenu && (
+              <div
+                className={`absolute mt-2 w-44 rounded shadow-lg border z-20 ${
+                  theme === "dark"
+                    ? "bg-[#1c1c2a] text-cyan-200 border-cyan-500"
+                    : "bg-white text-black border-gray-400"
+                }`}
               >
-                📄 Export as JSON
-              </button>
-              <button
-                onClick={() => {
-                  exportCSV();
-                  setShowExportMenu(false);
-                }}
-                className="block w-full text-left px-4 py-2 hover:bg-green-500 hover:text-black"
-              >
-                📑 Export as CSV
-              </button>
-            </div>
-          )}
+                <button
+                  onClick={() => {
+                    exportJSON();
+                    setShowExportMenu(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 hover:bg-green-500 hover:text-black"
+                >
+                  📄 Export as JSON
+                </button>
+                <button
+                  onClick={() => {
+                    exportCSV();
+                    setShowExportMenu(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 hover:bg-green-500 hover:text-black"
+                >
+                  📑 Export as CSV
+                </button>
+              </div>
+            )}
+          </div>
+
+          <button onClick={resetAll} className="btn bg-red-600 text-black hover:bg-red-500">
+            Reset 🧨
+          </button>
+
+          <button onClick={toggleAddForm} className="btn bg-purple-700 text-black hover:bg-purple-500">
+            Add ➕
+          </button>
+
+          <button onClick={onOpenSummary} className="btn bg-orange-500 text-black hover:bg-orange-400">
+            Generate Summary 📊
+          </button>
+
+          <button onClick={onOpenFilters} className="btn bg-pink-300 text-black hover:bg-pink-400">
+            Filters ⚙️
+          </button>
+
+          {/* Search bar */}
+          <input
+            type="text"
+            placeholder="🔎 Search bugs..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className={`px-4 py-2 rounded shadow focus:outline-none focus:ring-2 w-full sm:w-60
+              ${
+                theme === "dark"
+                  ? "bg-[#1c1c2a] text-cyan-200 border border-cyan-400 focus:ring-cyan-500"
+                  : "bg-white text-black border border-gray-400 focus:ring-gray-500"
+              }`}
+          />
+
+          {/* Sort Dropdown */}
+          <select
+            value={sortField}
+            onChange={(e) => setSortField(e.target.value)}
+            className={`px-3 py-2 rounded shadow focus:outline-none focus:ring-2 
+              ${
+                theme === "dark"
+                  ? "bg-[#1c1c2a] text-cyan-200 border border-cyan-400 focus:ring-cyan-500"
+                  : "bg-white text-black border border-gray-400 focus:ring-gray-500"
+              }`}
+            aria-label="Sort bugs by field"
+          >
+            <option value="" disabled style={{ fontWeight: "bold" }}>
+              -- Sort bugs by --
+            </option>
+            <option value="ScenarioID">Sort by: Scenario ID</option>
+            <option value="Status">Sort by: Status</option>
+            <option value="Priority">Sort by: Priority</option>
+            <option value="Severity">Sort by: Severity</option>
+          </select>
         </div>
-
-        <button
-          onClick={resetAll}
-          className="btn bg-red-600 text-black hover:bg-red-500"
-        >
-          Reset 🧨
-        </button>
-
-        <button
-          onClick={toggleAddForm}
-          className="btn bg-purple-700 text-black hover:bg-purple-500"
-        >
-          Add ➕
-        </button>
-
-        <button
-          onClick={onOpenSummary}
-          className="btn bg-orange-500 text-black hover:bg-orange-400"
-        >
-          Generate Summary 📊
-        </button>
-
-        <button
-          onClick={onOpenFilters}
-          className="btn bg-pink-300 text-black hover:bg-pink-400"
-        >
-          Filters ⚙️
-        </button>
-
-        {/* Search bar */}
-        <input
-          type="text"
-          placeholder="🔎 Search bugs..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className={`px-4 py-2 rounded shadow focus:outline-none focus:ring-2 
-            ${
-              theme === "dark"
-                ? "bg-[#1c1c2a] text-cyan-200 border border-cyan-400 focus:ring-cyan-500"
-                : "bg-white text-black border border-gray-400 focus:ring-gray-500"
-            }`}
-        />
-
-        {/* Sort Dropdown */}
-        <select
-          value={sortField}
-          onChange={(e) => setSortField(e.target.value)}
-          className={`px-3 py-2 rounded shadow focus:outline-none focus:ring-2 
-            ${
-              theme === "dark"
-                ? "bg-[#1c1c2a] text-cyan-200 border border-cyan-400 focus:ring-cyan-500"
-                : "bg-white text-black border border-gray-400 focus:ring-gray-500"
-            }`}
-          aria-label="Sort bugs by field"
-        >
-          <option value="" disabled style={{ fontWeight: "bold" }}>
-            -- Sort bugs by --
-          </option>
-          <option value="ScenarioID">Sort by: Scenario ID</option>
-          <option value="Status">Sort by: Status</option>
-          <option value="Priority">Sort by: Priority</option>
-          <option value="Severity">Sort by: Severity</option>
-        </select>
-      </div>
+      )}
     </div>
   );
 }

@@ -2,17 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 🌌 Cyberpunk background (Dark mode default) */
+/* 🌌 CSS Variables for colors */
+:root {
+  --color-neon-cyan: #0ff;
+  --color-neon-magenta: #f0f;
+  --color-dark-bg: #0d0d1c;
+  --color-dark-text: #e0e0f0;
+  --color-light-bg: #f7f7f7;
+  --color-light-text: #111;
+  --color-glass-dark: rgba(20, 25, 35, 0.6);
+  --color-glass-light: rgba(255, 255, 255, 0.04);
+}
+
+/* 🌌 Base Styles */
 body {
-  @apply bg-[#0d0d1c] text-[#e0e0f0] font-mono;
-  background: linear-gradient(135deg, #050510, #0d0d1c);
-  background-repeat: no-repeat;
-  background-size: cover;
+  @apply font-mono;
+  background: linear-gradient(135deg, #050510, var(--color-dark-bg));
+  color: var(--color-dark-text);
   overflow-x: hidden;
   min-height: 100vh;
 }
 
-/* 🧬 Matrix-style falling glow lines */
+/* 🧬 Matrix-style lines */
 body::before {
   content: '';
   position: fixed;
@@ -20,7 +31,7 @@ body::before {
   background: repeating-linear-gradient(
     0deg,
     transparent 0px,
-    #0ff2 1px,
+    var(--color-neon-cyan)22 1px,
     transparent 2px
   );
   opacity: 0.03;
@@ -35,62 +46,65 @@ body::before {
   100% { opacity: 0.02; }
 }
 
-/* 🔷 Neon input glow */
+/* 🔷 Inputs, Textareas, Selects */
 input, select, textarea {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid #00ffff44;
-  color: #e0e0f0;
+  border: 1px solid var(--color-neon-cyan)44;
+  color: var(--color-dark-text);
   @apply px-3 py-2 rounded;
-  transition: all 0.2s ease-in-out;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 input:focus, textarea:focus {
   outline: none;
-  border-color: #0ff;
-  box-shadow: 0 0 5px #0ff;
+  border-color: var(--color-neon-cyan);
+  box-shadow: 0 0 5px var(--color-neon-cyan);
 }
 
-/* ✨ Buttons (default dark mode styles) */
+/* ✨ Buttons */
 .btn {
   @apply px-4 py-2 rounded font-semibold transition;
 }
+
 .btn-glow {
-  background: linear-gradient(45deg, #0ff, #0ff9);
-  color: #0d0d1c;
-  box-shadow: 0 0 8px #0ff;
+  background: linear-gradient(45deg, var(--color-neon-cyan), #0ff9);
+  color: var(--color-dark-bg);
+  box-shadow: 0 0 8px var(--color-neon-cyan);
+  transition: transform 0.2s ease-in-out, background 0.2s ease-in-out;
 }
+
 .btn-glow:hover {
-  background: #00ffff;
+  background: var(--color-neon-cyan);
   transform: scale(1.05);
 }
 
-/* 🎴 Glass cards */
+/* 🎴 Glass Cards */
 .glass {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid #0ff3;
+  background: var(--color-glass-dark);
+  border: 1px solid var(--color-neon-cyan)33;
   border-radius: 12px;
   padding: 1rem;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease-in-out;
 }
+
 .card-hover:hover {
   transform: scale(1.02);
-  box-shadow: 0 0 10px #0ff8;
+  box-shadow: 0 0 10px var(--color-neon-cyan)88;
 }
 
-/* 🌞 Light Mode Support */
+/* 🌗 Light Mode */
 body.light-mode {
-  background: #f7f7f7;
-  color: #111;
+  background: var(--color-light-bg);
+  color: var(--color-light-text);
   font-family: 'Inter', sans-serif;
 }
 
 body.light-mode .glass {
-  background: rgba(0, 0, 0, 1);
+  background: var(--color-glass-light);
   border-color: #ccc;
-  color: #fff;
+  color: #111;
 }
-
 
 body.light-mode input,
 body.light-mode textarea {
@@ -104,24 +118,21 @@ body.light-mode textarea:focus {
   box-shadow: 0 0 0 2px #00bcd4;
 }
 
-/* Keep original button colors in light mode */
-body.light-mode .btn {
-  border-color: transparent;
-}
-
+/* 🌗 Buttons Light Mode */
+body.light-mode .btn { border-color: transparent; }
 body.light-mode .btn.bg-yellow-300 { background-color: #fde047; color: #000; }
 body.light-mode .btn.bg-green-400  { background-color: #4ade80; color: #000; }
 body.light-mode .btn.bg-red-600    { background-color: #ef4444; color: #fff; }
 body.light-mode .btn.bg-purple-700 { background-color: #9333ea; color: #fff; }
 
-/* 🌗 Light/Dark Toggle Effects */
+/* 🌗 Theme Toggle */
 .theme-toggle {
   transition: transform 0.5s ease, text-shadow 0.5s ease;
 }
 
 .theme-toggle:hover {
   transform: scale(1.2) rotate(20deg);
-  text-shadow: 0 0 10px #0ff, 0 0 20px #f0f;
+  text-shadow: 0 0 10px var(--color-neon-cyan), 0 0 20px var(--color-neon-magenta);
 }
 
 .theme-toggle.spin {
@@ -129,115 +140,81 @@ body.light-mode .btn.bg-purple-700 { background-color: #9333ea; color: #fff; }
 }
 
 @keyframes spinToggle {
-  from {
-    transform: rotate(0deg) scale(1);
-  }
-  to {
-    transform: rotate(360deg) scale(1.2);
-  }
+  from { transform: rotate(0deg) scale(1); }
+  to   { transform: rotate(360deg) scale(1.2); }
 }
 
-/* 🌟 Updated Glass & Modal Animations */
-.glass {
-  background: rgba(20, 25, 35, 0.6); 
-  backdrop-filter: blur(10px);
-}
-
+/* 🌟 Animations */
 .animate-fadeIn {
   animation: fadeIn 0.25s ease-in-out;
 }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.96); }
-  to { opacity: 1; transform: scale(1); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
-/* 🐞 BugCard field styles */
+/* 🐞 BugCard */
 .bug-field {
   background-color: rgba(0, 0, 0, 0.5);
   border: 1px solid #00ffff66;
   color: #fff;
   padding: 0.5rem 0.75rem;
   border-radius: 0.375rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-/* Light mode BugCard field */
 body.light-mode .bug-field {
   background-color: #fff;
   border: 1px solid #ccc;
   color: #000;
 }
 
-/* Light mode editable focus glow */
 body.light-mode .bug-field:focus {
   border-color: #00bcd4;
   box-shadow: 0 0 4px #00bcd4;
 }
 
-/* Light mode BugCard labels */
 body.light-mode label {
   color: #333;
 }
-/* Light mode BugCard */
-body.light-mode .bug-card{
-  background:#ffffff;
-  border:1px solid #000000;
-  color:#000;
+
+body.light-mode .bug-card {
+  background: #fff;
+  border: 1px solid #000;
+  color: #000;
+  transition: box-shadow 0.2s ease-in-out;
 }
+
 body.light-mode .bug-card:hover {
-  box-shadow:0 0 8px #00bcd4;
+  box-shadow: 0 0 8px #00bcd4;
 }
-/* 🔹 Toastify global styles (Cyberpunk neon theme) */
+
+/* 🔹 Toastify */
 .Toastify__toast {
   border-radius: 8px;
   font-weight: bold;
   transition: all 0.3s ease-in-out;
 }
 
-/* Dark mode neon style */
 body:not(.light-mode) .Toastify__toast {
   background: linear-gradient(90deg, #0f0c29, #302b63, #24243e);
-  color: #00fff7;
-  border: 1px solid #00fff7;
+  color: var(--color-neon-cyan);
+  border: 1px solid var(--color-neon-cyan);
   text-shadow: 0 0 6px rgba(0, 255, 255, 0.8);
   box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
 }
 
-/* Light mode neon style */
 body.light-mode .Toastify__toast {
-  background: 
-    linear-gradient(90deg, #000080, #550033, #780606);
+  background: linear-gradient(90deg, #000080, #550033, #780606);
   color: #e0b3ff;
   border: 1px solid #9d4edd;
-  border-radius: 8px;
   text-shadow: 0 0 6px rgba(148, 88, 242, 0.7);
-  box-shadow: 
-    0 0 10px rgba(255, 215, 0, 0.8),  
-    0 0 15px rgba(192, 192, 192, 0.6); 
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 15px rgba(192, 192, 192, 0.6);
 }
 
-/* Success */
-.Toastify__toast--success {
-  border-left: 6px solid #00ffcc;
-  box-shadow: 0 0 12px #00ffcc;
-}
-
-/* Error */
-.Toastify__toast--error {
-  border-left: 6px solid #ff0055;
-  box-shadow: 0 0 12px #ff0055;
-}
-
-/* Warning */
-.Toastify__toast--warning {
-  border-left: 6px solid #ffcc00;
-  box-shadow: 0 0 12px #ffcc00;
-  color: #000;
-}
-
-/* Info */
-.Toastify__toast--info {
-  border-left: 6px solid #00aaff;
-  box-shadow: 0 0 12px #00aaff;
-}
-
+/* Toast types */
+.Toastify__toast--success { border-left: 6px solid #00ffcc; box-shadow: 0 0 12px #00ffcc; }
+.Toastify__toast--error   { border-left: 6px solid #ff0055; box-shadow: 0 0 12px #ff0055; }
+.Toastify__toast--warning { border-left: 6px solid #ffcc00; box-shadow: 0 0 12px #ffcc00; color: #000; }
+.Toastify__toast--info    { border-left: 6px solid #00aaff; box-shadow: 0 0 12px #00aaff; }
