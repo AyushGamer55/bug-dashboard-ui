@@ -4,6 +4,7 @@ import axios from "axios";
 import Lottie from "react-lottie-player";
 import cyberpunkVideo from "../assets/cyberpunk-bg.mp4";
 import checkmarkAnimation from "../assets/checkmark.json";
+import emailAnimation from "../assets/email.json";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 export default function PasswordReset() {
@@ -26,7 +27,10 @@ export default function PasswordReset() {
 
     setLoading(true);
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/auth/reset-password`, { email, newPassword });
+      await axios.post(`${import.meta.env.VITE_API_URL}/auth/reset-password`, {
+        email,
+        newPassword,
+      });
       setSuccess(true);
       setTimeout(() => navigate("/login"), 1200);
     } catch (err) {
@@ -53,7 +57,21 @@ export default function PasswordReset() {
             onSubmit={handleSubmit}
             className="bg-black/70 p-8 rounded-2xl shadow-lg flex flex-col gap-4 w-80 relative"
           >
-            <h2 className="text-xl font-semibold text-center text-white mb-4">Reset Password</h2>
+            {/* Show email animation only when not loading */}
+            {!loading && (
+              <div className="flex justify-center mb-2">
+                <Lottie
+                  animationData={emailAnimation}
+                  play
+                  loop
+                  style={{ width: 120, height: 120 }}
+                />
+              </div>
+            )}
+
+            <h2 className="text-xl font-semibold text-center text-white mb-2">
+              Reset Password
+            </h2>
 
             <input
               type="email"
@@ -78,7 +96,11 @@ export default function PasswordReset() {
                 onClick={() => setShowPassword((prev) => !prev)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
               >
-                {showPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+                {showPassword ? (
+                  <EyeSlashIcon className="h-5 w-5" />
+                ) : (
+                  <EyeIcon className="h-5 w-5" />
+                )}
               </button>
             </div>
 
@@ -96,7 +118,11 @@ export default function PasswordReset() {
                 onClick={() => setShowConfirm((prev) => !prev)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
               >
-                {showConfirm ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+                {showConfirm ? (
+                  <EyeSlashIcon className="h-5 w-5" />
+                ) : (
+                  <EyeIcon className="h-5 w-5" />
+                )}
               </button>
             </div>
 
@@ -112,8 +138,15 @@ export default function PasswordReset() {
           </form>
         ) : (
           <div className="flex flex-col items-center gap-4">
-            <Lottie animationData={checkmarkAnimation} loop={false} play style={{ width: 140, height: 140 }} />
-            <p className="text-green-300">Password reset successful! Redirecting to login...</p>
+            <Lottie
+              animationData={checkmarkAnimation}
+              loop={false}
+              play
+              style={{ width: 140, height: 140 }}
+            />
+            <p className="text-green-300">
+              Password reset successful! Redirecting to login...
+            </p>
           </div>
         )}
       </div>
