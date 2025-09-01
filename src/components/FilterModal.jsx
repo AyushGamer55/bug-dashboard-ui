@@ -1,13 +1,25 @@
 // src/components/FilterModal.jsx
 import React from "react";
+import { normalizeValue, SORT_ORDER } from "../utils/Sorting";
 
 function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
   if (!open) return null;
 
-  // Dynamically get unique values for each field from bugs
+  // Get unique values for each field from ALL bugs (not filtered)
   const getUniqueValues = (key) => {
     const values = bugs.map((bug) => bug[key]).filter(Boolean);
-    return [...new Set(values)];
+    const unique = [...new Set(values)];
+    const order = SORT_ORDER[key];
+    if (order) {
+      unique.sort((a, b) => {
+        const normA = normalizeValue(key, a);
+        const normB = normalizeValue(key, b);
+        const indexA = order.indexOf(normA);
+        const indexB = order.indexOf(normB);
+        return (indexA === -1 ? order.length : indexA) - (indexB === -1 ? order.length : indexB);
+      });
+    }
+    return unique;
   };
 
   const fields = [

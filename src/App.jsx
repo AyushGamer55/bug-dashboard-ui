@@ -149,11 +149,17 @@ function App() {
     showAddForm,
     showFilters,
     newBug,
+    sortField,
+    sortOrder,
+    filters,
     setSearch,
     setEditMode,
     setShowAddForm,
     setShowFilters,
     setNewBug,
+    setSortField,
+    setSortOrder,
+    setFilters,
     handleFile,
     handleAddBug,
     resetAll,
@@ -162,17 +168,15 @@ function App() {
     handleDelete,
     handleUpdate,
     handleOpenFilters,
+    deviceId
   } = useBugLogic();
 
   const [theme, setTheme] = useState("dark");
   const [showSummary, setShowSummary] = useState(false);
   const [summaryData, setSummaryData] = useState(null);
   const [summaryMode, setSummaryMode] = useState("text");
-  const [filters, setFilters] = useState({});
-  const [sortField, setSortField] = useState("ScenarioID");
-  const [sortOrder, setSortOrder] = useState("asc");
 
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, token } = useAuth();
 
   useEffect(() => {
     document.body.className = theme === "light" ? "light-mode" : "";
@@ -184,7 +188,9 @@ function App() {
   const handleOpenSummary = async () => {
     if (!bugs.length) return alert("❌ No bugs available to summarize!");
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/bugs/summary`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/bugs/summary?deviceId=${deviceId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       if (!res.ok) throw new Error("Failed to fetch summary");
       const data = await res.json();
       setSummaryData(data);

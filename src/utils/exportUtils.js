@@ -6,7 +6,7 @@ import Papa from "papaparse";
 const cleanBugForExport = (bug) => {
   const flat = {};
   for (const key in bug) {
-    if (["_id", "deviceId", "createdAt", "updatedAt", "__v"].includes(key)) continue; // skip metadata
+    if (["_id", "deviceId", "createdAt", "updatedAt", "createdBy", "__v",].includes(key)) continue; // skip metadata
     const val = bug[key];
     if (val && typeof val === "object") {
       flat[key] = JSON.stringify(val); // flatten nested objects

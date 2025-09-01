@@ -30,11 +30,11 @@ export const normalizeValue = (field, value) => {
   }
 
   if (field === "Severity") {
-    if (v.includes("critical") || v.includes("blocker") || v.includes("showstopper"))
+    if (v.startsWith("h") || v.includes("critical") || v.includes("blocker") || v.includes("showstopper"))
       return "Critical";
-    if (v.includes("major") || v.includes("significant") || v.includes("important"))
+    if (v.startsWith("m") || v.includes("major") || v.includes("significant") || v.includes("important"))
       return "Major";
-    if (v.includes("minor") || v.includes("trivial") || v.includes("cosmetic"))
+    if (v.startsWith("l") || v.includes("minor") || v.includes("trivial") || v.includes("cosmetic"))
       return "Minor";
     return "Minor";
   }
