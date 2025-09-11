@@ -10,7 +10,9 @@ export const AuthProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : null;
   });
 
-  const [token, setToken] = useState(() => localStorage.getItem("token") || null);
+  const [token, setToken] = useState(
+    () => localStorage.getItem("token") || null
+  );
 
   useEffect(() => {
     if (token) localStorage.setItem("token", token);
@@ -30,12 +32,20 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setToken(null);
     setUser(null);
+    try {
+      sessionStorage.removeItem("screenshot_data");
+      sessionStorage.removeItem("fetched_screenshot_data");
+    } catch (error) {
+      console.warn("sessionStorage removeItem error during logout:", error);
+    }
   };
 
   const isAuthenticated = !!token;
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated }}>
+    <AuthContext.Provider
+      value={{ user, token, login, logout, isAuthenticated }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -1,7 +1,9 @@
+// src/components/Header.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import logo from "../assets/logo.png";
+import { toast } from "react-toastify";
 
 function Header({
   onFile,
@@ -20,10 +22,16 @@ function Header({
   onOpenFilters,
   sortField,
   setSortField,
+  sortOrder,
+  setSortOrder,
+  onOpenScreenshot,
+  clearScreenshots,
+  clearFetchedScreenshots,
 }) {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const [showExportMenu, setShowExportMenu] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const exportRef = useRef(null);
 
   // Close dropdown if clicking outside
@@ -38,12 +46,37 @@ function Header({
   }, []);
 
   const handleLogout = () => {
+    // clear screenshots and fetched screenshots on logout as well
+    clearScreenshots();
+    clearFetchedScreenshots();
     logout();
     navigate("/login");
   };
 
+  const handleOpenScreenshots = () => {
+    // optional: dispatch an event so ScreenshotSection can focus its textarea if it wants
+    window.dispatchEvent(new Event("openScreenshotUpload"));
+    // navigate to dashboard and include hash to help jump/scroll to the section
+    navigate("/dashboard#screenshots");
+  };
+
+  const handleClearScreenshotsClick = () => {
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    clearScreenshots();
+    clearFetchedScreenshots();
+    toast.info("All screenshots deleted");
+    setShowConfirmModal(false);
+  };
+
+  const handleCancelDelete = () => {
+    setShowConfirmModal(false);
+  };
+
   return (
-    <div className="relative flex flex-col md:flex-row justify-between items-center gap-4 mb-6 p-6 shadow-lg">
+    <div className="relative flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 mb-4 sm:mb-6 p-4 sm:p-6 shadow-lg">
       {/* Top Right Controls */}
       <div className="absolute top-3 right-3 flex items-center gap-4 z-10">
         {/* Total Bugs Counter */}
@@ -65,8 +98,10 @@ function Header({
           onClick={() => {
             toggleTheme();
             const btn = document.querySelector(".theme-toggle");
-            btn.classList.add("spin");
-            setTimeout(() => btn.classList.remove("spin"), 600);
+            if (btn) {
+              btn.classList.add("spin");
+              setTimeout(() => btn.classList.remove("spin"), 600);
+            }
           }}
           className="theme-toggle text-2xl hover:scale-110 transition"
           title="Toggle Light/Dark Mode"
@@ -84,10 +119,16 @@ function Header({
           </button>
         ) : (
           <div className="flex gap-2">
-            <Link to="/login" className="btn bg-blue-500 text-white hover:bg-blue-400">
+            <Link
+              to="/login"
+              className="btn bg-blue-500 text-white hover:bg-blue-400"
+            >
               Login 🔐
             </Link>
-            <Link to="/register" className="btn bg-green-500 text-white hover:bg-green-400">
+            <Link
+              to="/register"
+              className="btn bg-green-500 text-white hover:bg-green-400"
+            >
               Register 🔑
             </Link>
           </div>
@@ -99,27 +140,21 @@ function Header({
         <img
           src={logo}
           alt="Spider Logo"
-          className="h-32 sm:h-28 w-auto object-contain drop-shadow-[0_0_10px_#f00] animate-pulse"
+          className="w-16 h-12 sm:w-20 sm:h-14 md:w-24 md:h-16 object-cover object-center"
         />
         <div>
           <h1
-            className={`text-5xl md:text-6xl sm:text-5xl font-bold tracking-wider animate-pulse
-              ${
-                theme === "dark"
-                  ? "text-cyan-400 drop-shadow-[0_0_10px_#0ff]"
-                  : "text-purple-700 drop-shadow-[0_0_6px_#a78bfa]"
-              }`}
+            className={`text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide
+              ${theme === "dark" ? "text-cyan-400" : "text-purple-700"}`}
           >
             Bug Report Dashboard
           </h1>
-          <p className="text-sm text-red-600 italic">
+          <p className="text-xs sm:text-sm text-red-600 italic max-w-md">
             View bug reports, upload new ones, edit, delete, generate summaries,
             and manage everything efficiently.
           </p>
         </div>
       </div>
-
-      {/* Buttons + Search + Sort */}
       {isAuthenticated && (
         <div className="flex flex-wrap items-center gap-3">
           <label
@@ -128,7 +163,12 @@ function Header({
           >
             Upload File 📁
           </label>
-          <input id="file-upload" type="file" onChange={onFile} className="hidden" />
+          <input
+            id="file-upload"
+            type="file"
+            onChange={onFile}
+            className="hidden"
+          />
 
           <button
             onClick={toggleEdit}
@@ -176,21 +216,86 @@ function Header({
             )}
           </div>
 
-          <button onClick={resetAll} className="btn bg-red-600 text-black hover:bg-red-500">
+          <button
+            onClick={resetAll}
+            className="btn bg-red-600 text-black hover:bg-red-500"
+          >
             Reset 🧨
           </button>
 
-          <button onClick={toggleAddForm} className="btn bg-purple-700 text-black hover:bg-purple-500">
+          <button
+            onClick={toggleAddForm}
+            className="btn bg-purple-700 text-black hover:bg-purple-500"
+          >
             Add ➕
           </button>
 
-          <button onClick={onOpenSummary} className="btn bg-orange-500 text-black hover:bg-orange-400">
+          <button
+            onClick={onOpenSummary}
+            className="btn bg-orange-500 text-black hover:bg-orange-400"
+          >
             Generate Summary 📊
           </button>
 
-          <button onClick={onOpenFilters} className="btn bg-pink-300 text-black hover:bg-pink-400">
+          <button
+            onClick={onOpenFilters}
+            className="btn bg-pink-300 text-black hover:bg-pink-400"
+          >
             Filters ⚙️
           </button>
+
+          {/* Upload Screenshot Button */}
+          <button
+            onClick={onOpenScreenshot}
+            className="btn bg-indigo-700 text-black hover:bg-indigo-400"
+          >
+            Upload Screenshot 📷
+          </button>
+
+          {/* Delete Screenshot Button */}
+          <button
+            onClick={handleClearScreenshotsClick}
+            className="btn bg-purple-700 text-black hover:bg-purple-400"
+          >
+            Delete Screenshot 🗑️
+          </button>
+
+          {/* Confirmation Modal */}
+          {showConfirmModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+              <div
+                className={`rounded-md p-6 w-80 shadow-lg ${
+                  theme === "dark"
+                    ? "bg-[#1c1c2a] text-cyan-200 border border-cyan-500"
+                    : "bg-white text-black border border-gray-400"
+                }`}
+              >
+                <h3 className="text-lg font-bold mb-4">Confirm Delete</h3>
+                <p className="text-sm mb-6">
+                  Are you sure you want to delete all screenshots? This action
+                  cannot be undone.
+                </p>
+                <div className="flex justify-end gap-4">
+                  <button
+                    onClick={handleCancelDelete}
+                    className={`btn ${
+                      theme === "dark"
+                        ? "bg-gray-600 hover:bg-gray-500 text-cyan-200"
+                        : "bg-gray-300 hover:bg-gray-400 text-black"
+                    }`}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleConfirmDelete}
+                    className="btn bg-red-500 hover:bg-red-600 text-white"
+                  >
+                    Confirm Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Search bar */}
           <input
