@@ -70,7 +70,7 @@ function ScreenshotSection({
   const fetchFromCloudinary = async () => {
     setIsFetching(true);
     try {
-      const response = await axios.get("/api/images");
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/images`);
       const cloudinaryImages = response.data.map((img) => ({
         id: img.public_id,
         url: img.url,
