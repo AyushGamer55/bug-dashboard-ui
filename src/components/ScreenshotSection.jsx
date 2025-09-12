@@ -449,7 +449,7 @@ function ScreenshotSection({
               onClick={() => setPreviewUrl(null)}
               className="absolute top-2 right-2 text-xl font-bold text-black"
             >
-              ×
+              X
             </button>
             <img
               src={previewUrl}
