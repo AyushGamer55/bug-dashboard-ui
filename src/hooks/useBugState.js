@@ -23,7 +23,7 @@ export const useBugState = () => {
 
   const [newBug, setNewBug] = useState({
     ScenarioID: '',
-    TestCaseID: '',
+    Category: '',
     Description: '',
     Status: '',
     Priority: '',
@@ -53,7 +53,7 @@ export const useBugState = () => {
   const resetNewBug = () => {
     setNewBug({
       ScenarioID: '',
-      TestCaseID: '',
+      Category: '',
       Description: '',
       Status: '',
       Priority: '',

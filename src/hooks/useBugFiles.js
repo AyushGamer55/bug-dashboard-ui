@@ -24,7 +24,7 @@ export const useBugFiles = (deviceId, token, onBugsUpdate) => {
           const trimmed = key.trim();
           const lower = trimmed.toLowerCase();
           if (lower === 'scenarioid') return 'ScenarioID';
-          if (lower === 'testcaseid') return 'TestCaseID';
+          if (lower === 'testcaseid') return 'Category';
           if (lower === 'description') return 'Description';
           if (lower === 'status') return 'Status';
           if (lower === 'priority') return 'Priority';

@@ -3,7 +3,7 @@ export const isValidBug = (bug) => {
 
   const fields = [
     "ScenarioID",
-    "TestCaseID",
+    "Category",
     "Description",
     "Status",
     "Priority",

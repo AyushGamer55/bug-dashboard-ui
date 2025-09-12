@@ -250,7 +250,7 @@ export default function BugCard({
 
       <div className="grid md:grid-cols-2 gap-x-6">
         {renderField("Scenario ID", "ScenarioID", localBug.ScenarioID)}
-        {renderField("Category", "TestCaseID", localBug.TestCaseID)}
+        {renderField("Category", "Category", localBug.Category)}
         {renderField("Description", "Description", localBug.Description, true)}
         {renderField("Status", "Status", localBug.Status)}
         {renderField("Priority", "Priority", localBug.Priority)}

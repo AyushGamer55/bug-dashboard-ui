@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { validateImageUrl, convertToDirectLink } from "../utils/validateurl";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
+import CategoryFolders from "./CategoryFolders";
 
 function ScreenshotSection({
   openScreenshotUpload,
@@ -73,7 +74,7 @@ function ScreenshotSection({
       const cloudinaryImages = response.data.map((img) => ({
         id: img.public_id,
         url: img.url,
-        title: `Cloudinary Image`,
+        title: `Screenshot Image`,
         category: "",
         createdAt: img.created_at,
       }));
@@ -97,7 +98,7 @@ function ScreenshotSection({
         // Assign sequential titles to new images
         const numberedImages = newImages.map((img, index) => ({
           ...img,
-          title: `Cloudinary Image ${fetchedScreenshots.length + index + 1}`,
+          title: `Screenshot Image ${fetchedScreenshots.length + index + 1}`,
         }));
         addFetchedScreenshot(numberedImages);
         toast.success(`${newImages.length} images fetched from Cloudinary`);
@@ -227,9 +228,9 @@ function ScreenshotSection({
   ];
 
   return (
-    <div id="screenshots" className="glass p-4 rounded-md shadow-md mt-4">
+    <>
       {openScreenshotUpload && (
-        <>
+        <div id="screenshots" className="glass p-4 rounded-md shadow-md mt-4">
           <h2 className="text-xl font-bold mb-3">📸 Screenshot Section</h2>
           <textarea
             ref={textareaRef}
@@ -283,7 +284,7 @@ function ScreenshotSection({
                 : "Fetch from Cloudinary"}
             </button>
           </div>
-        </>
+        </div>
       )}
 
       <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -374,6 +375,12 @@ function ScreenshotSection({
         ))}
       </div>
 
+      {/* CategoryFolders component below the screenshots grid */}
+      <CategoryFolders
+        screenshots={screenshots}
+        fetchedScreenshots={fetchedScreenshots}
+      />
+
       {/* Image Preview Modal */}
       {previewUrl && (
         <div
@@ -446,7 +453,7 @@ function ScreenshotSection({
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
 

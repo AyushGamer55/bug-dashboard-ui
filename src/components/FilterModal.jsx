@@ -1,4 +1,3 @@
-// src/components/FilterModal.jsx
 import React from "react";
 import { normalizeValue, SORT_ORDER } from "../utils/Sorting";
 
@@ -16,7 +15,10 @@ function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
         const normB = normalizeValue(key, b);
         const indexA = order.indexOf(normA);
         const indexB = order.indexOf(normB);
-        return (indexA === -1 ? order.length : indexA) - (indexB === -1 ? order.length : indexB);
+        return (
+          (indexA === -1 ? order.length : indexA) -
+          (indexB === -1 ? order.length : indexB)
+        );
       });
     }
     return unique;
@@ -26,7 +28,7 @@ function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
     { label: "Status", key: "Status" },
     { label: "Priority", key: "Priority" },
     { label: "Severity", key: "Severity" },
-    { label: "Category", key: "TestCaseID" },
+    { label: "Category", key: "Category" },
   ];
 
   const handleToggle = (key, value) => {
@@ -59,9 +61,11 @@ function FilterModal({ open, onClose, bugs, filters, setFilters, theme }) {
       {/* Drawer */}
       <div
         className={`w-64 sm:w-80 h-full shadow-lg border-l overflow-y-auto transition-transform transform
-        ${theme === "dark"
-          ? "bg-gradient-to-b from-purple-900 via-indigo-900 to-blue-900 text-white border-purple-700"
-          : "bg-gradient-to-b from-pink-100 via-purple-100 to-blue-100 text-black border-gray-300"}
+        ${
+          theme === "dark"
+            ? "bg-gradient-to-b from-purple-900 via-indigo-900 to-blue-900 text-white border-purple-700"
+            : "bg-gradient-to-b from-pink-100 via-purple-100 to-blue-100 text-black border-gray-300"
+        }
         animate-slideIn`}
       >
         <div className="flex justify-between items-center px-4 py-3 border-b border-gray-500">

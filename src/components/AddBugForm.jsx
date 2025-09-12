@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 function AddBugForm({ newBug, setNewBug, handleAddBug }) {
   const [showHint, setShowHint] = useState(false);
 
   const handleClick = () => {
-    const hasValue = Object.values(newBug).some(v => v && v.trim() !== '');
+    const hasValue = Object.values(newBug).some((v) => v && v.trim() !== "");
     if (!hasValue) {
       setShowHint(true);
       return;
@@ -15,19 +15,32 @@ function AddBugForm({ newBug, setNewBug, handleAddBug }) {
 
   return (
     <div className="bg-black shadow-md p-4 mt-4 rounded border border-blue-300">
-      <h2 className="text-lg font-semibold mb-2 text-blue-600">➕ Add New Scenario</h2>
+      <h2 className="text-lg font-semibold mb-2 text-blue-600">
+        ➕ Add New Scenario
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
         {Object.keys(newBug)
-          .filter(key => key !== 'deviceId') // hide deviceId from form
-          .map(key => (
-            <input
-              key={key}
-              type="text"
-              placeholder={key}
-              value={newBug[key]}
-              onChange={(e) => setNewBug({ ...newBug, [key]: e.target.value })}
-              className="p-2 rounded bg-transparent border border-cyan-500 text-white text-sm"
-            />
+          .filter((key) => key !== "deviceId") // hide deviceId from form
+          .map((key) => (
+            <div key={key}>
+              <label
+                htmlFor={key}
+                className="block text-sm font-medium text-cyan-300 mb-1"
+              >
+                {key}
+              </label>
+              <input
+                id={key}
+                name={key}
+                type="text"
+                placeholder={key}
+                value={newBug[key]}
+                onChange={(e) =>
+                  setNewBug({ ...newBug, [key]: e.target.value })
+                }
+                className="p-2 rounded bg-transparent border border-cyan-500 text-white text-sm w-full"
+              />
+            </div>
           ))}
       </div>
       <button
@@ -38,7 +51,8 @@ function AddBugForm({ newBug, setNewBug, handleAddBug }) {
       </button>
       {showHint && (
         <p className="text-yellow-400 text-sm mt-1">
-          Please fill at least <span className="font-semibold">one</span> field before saving.
+          Please fill at least <span className="font-semibold">one</span> field
+          before saving.
         </p>
       )}
     </div>

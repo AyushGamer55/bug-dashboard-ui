@@ -168,7 +168,7 @@ function Dashboard(props) {
         openScreenshotUpload={openScreenshotUpload}
         onToggleUpload={handleOpenScreenshot}
         categories={[
-          ...new Set(bugs.map((bug) => bug.TestCaseID).filter(Boolean)),
+          ...new Set(bugs.map((bug) => bug.Category).filter(Boolean)),
         ]}
         screenshots={screenshots}
         addScreenshot={addScreenshot}

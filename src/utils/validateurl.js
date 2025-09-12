@@ -14,19 +14,14 @@ export async function validateImageUrl(url) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 seconds timeout
 
+  // First, try with CORS mode to properly check headers
   try {
     const response = await fetch(url, {
       method: 'HEAD',
       signal: controller.signal,
-      mode: 'no-cors', // Try no-cors mode for cross-origin requests
+      mode: 'cors',
     });
     clearTimeout(timeoutId);
-
-    // With no-cors mode, we can't read headers, so we assume it's valid if no error
-    if (response.type === 'opaque') {
-      // Opaque response means CORS blocked, but request succeeded
-      return { valid: true };
-    }
 
     const contentType = response.headers.get("Content-Type");
 
@@ -44,13 +39,36 @@ export async function validateImageUrl(url) {
     clearTimeout(timeoutId);
     if (error.name === 'AbortError') {
       return { valid: false, error: "Request timed out" };
-    } else {
-      // For SharePoint/OneDrive, try a different approach
-      if (url.includes('sharepoint.com') || url.includes('onedrive.live.com')) {
-        // Assume it's valid for cloud storage links that fail CORS check
-        return { valid: true };
+    } else if (error.message.includes('CORS') || error.message.includes('NetworkError')) {
+      // CORS error, fallback to no-cors mode
+      try {
+        const response = await fetch(url, {
+          method: 'HEAD',
+          signal: controller.signal,
+          mode: 'no-cors',
+        });
+        clearTimeout(timeoutId);
+
+        if (response.type === 'opaque') {
+          // Opaque response means CORS blocked, but request succeeded
+          // Only accept if it's a known cloud storage URL to be stricter
+          if (url.includes('sharepoint.com') || url.includes('onedrive.live.com') || url.includes('drive.google.com') || url.includes('dropbox.com')) {
+            return { valid: true };
+          } else {
+            return { valid: false, error: "URL blocked by CORS and not a recognized cloud storage link" };
+          }
+        } else {
+          return { valid: false, error: "Unexpected response type" };
+        }
+      } catch (fallbackError) {
+        if (fallbackError.name === 'AbortError') {
+          return { valid: false, error: "Request timed out" };
+        } else {
+          return { valid: false, error: "Network error" };
+        }
       }
-      return { valid: false, error: "Network error or CORS issue" };
+    } else {
+      return { valid: false, error: "Network error" };
     }
   }
 }
