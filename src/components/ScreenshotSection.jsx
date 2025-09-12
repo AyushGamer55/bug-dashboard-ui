@@ -1,7 +1,11 @@
 // src/components/ScreenshotSection.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
-import { validateImageUrl, convertToDirectLink } from "../utils/validateurl";
+import {
+  validateImageUrl,
+  convertToDirectLink,
+  validatePastedImage,
+} from "../utils/validateurl";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import CategoryFolders from "./CategoryFolders";
@@ -70,7 +74,9 @@ function ScreenshotSection({
   const fetchFromCloudinary = async () => {
     setIsFetching(true);
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/images`);
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/images`
+      );
       const cloudinaryImages = response.data.map((img) => ({
         id: img.public_id,
         url: img.url,
@@ -189,6 +195,44 @@ function ScreenshotSection({
     }
   };
 
+  const handlePaste = async (e) => {
+    const items = e.clipboardData.items;
+    const imageItems = Array.from(items).filter((item) =>
+      item.type.startsWith("image/")
+    );
+
+    if (imageItems.length > 0) {
+      e.preventDefault(); // Prevent default paste behavior
+
+      for (const item of imageItems) {
+        const blob = item.getAsFile();
+        const validation = await validatePastedImage(blob);
+        if (validation.valid) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const dataUrl = event.target.result;
+            const newScreenshot = {
+              id: uuidv4(),
+              url: dataUrl,
+              title: `Pasted Image ${screenshots.length + 1}`,
+              category: "",
+              createdAt: new Date().toISOString(),
+            };
+            addScreenshot(newScreenshot);
+          };
+          reader.readAsDataURL(blob);
+        } else {
+          toast.error(`Invalid pasted image: ${validation.error}`);
+        }
+      }
+
+      if (imageItems.length > 0) {
+        toast.success(`${imageItems.length} image(s) pasted!`);
+      }
+    }
+    // If no images, allow normal paste
+  };
+
   const handleClear = () => {
     clearScreenshots();
     clearFetchedScreenshots();
@@ -236,7 +280,8 @@ function ScreenshotSection({
             ref={textareaRef}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Paste image URLs (comma or newline separated)"
+            onPaste={handlePaste}
+            placeholder="Paste image URLs or images (comma or newline separated)"
             className="w-full p-2 border rounded-md mb-2 resize-none h-24 text-black bg-white"
           />
           <input

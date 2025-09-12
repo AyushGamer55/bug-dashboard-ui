@@ -52,7 +52,7 @@ export async function validateImageUrl(url) {
         if (response.type === 'opaque') {
           // Opaque response means CORS blocked, but request succeeded
           // Only accept if it's a known cloud storage URL to be stricter
-          if (url.includes('sharepoint.com') || url.includes('onedrive.live.com') || url.includes('drive.google.com') || url.includes('dropbox.com')) {
+          if (url.includes('sharepoint.com') || url.includes('onedrive.live.com') || url.includes('drive.google.com') || url.includes('dropbox.com') || url.includes('jam.dev')) {
             return { valid: true };
           } else {
             return { valid: false, error: "URL blocked by CORS and not a recognized cloud storage link" };
@@ -71,6 +71,28 @@ export async function validateImageUrl(url) {
       return { valid: false, error: "Network error" };
     }
   }
+}
+
+// New function to validate pasted image data (Blob or File)
+export async function validatePastedImage(imageBlob) {
+  return new Promise((resolve) => {
+    if (!(imageBlob instanceof Blob)) {
+      resolve({ valid: false, error: "Pasted data is not an image" });
+      return;
+    }
+    const validTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif", "image/webp", "image/svg+xml"];
+    if (!validTypes.includes(imageBlob.type)) {
+      resolve({ valid: false, error: "Unsupported image type" });
+      return;
+    }
+    // Optionally, check size limits here (e.g., max 5MB)
+    const maxSize = 5 * 1024 * 1024;
+    if (imageBlob.size > maxSize) {
+      resolve({ valid: false, error: "Image size exceeds 5MB limit" });
+      return;
+    }
+    resolve({ valid: true });
+  });
 }
 
 // Convert cloud storage sharing links to direct download links
@@ -122,6 +144,15 @@ export function convertToDirectLink(url) {
           const baseUrl = urlObj.origin;
           return `${baseUrl}/_layouts/15/download.aspx?SourceUrl=/${sitePath}`;
         }
+      }
+    }
+
+    // Jam.dev Cloudflare image URLs
+    if (url.includes('jam.dev/cdn-cgi/image')) {
+      const lastSlash = url.lastIndexOf('/');
+      const sourceUrl = url.substring(lastSlash + 1);
+      if (sourceUrl.startsWith('https://')) {
+        return sourceUrl;
       }
     }
 
