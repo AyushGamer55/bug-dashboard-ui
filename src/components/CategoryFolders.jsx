@@ -28,11 +28,6 @@ function CategoryFolders({ screenshots, fetchedScreenshots }) {
     ([cat, shots]) => shots.length > 0 && cat !== "No category"
   );
 
-  // Hide the entire section if no categories with screenshots
-  if (categoriesWithScreenshots.length === 0) {
-    return null;
-  }
-
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -90,28 +85,30 @@ function CategoryFolders({ screenshots, fetchedScreenshots }) {
 
   return (
     <>
-      <div className="mt-4">
-        <h3 className="text-lg font-bold mb-2 text-gray-500">
-          📁 Category Folders
-        </h3>
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
-          {categoriesWithScreenshots.map(([category, shots]) => (
-            <div
-              key={category}
-              className="border rounded-md p-4 bg-white dark:bg-gray-900 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 flex flex-col items-center justify-center"
-              onClick={() => handleFolderClick(category)}
-            >
-              <div className="text-2xl text-black dark:text-white">📁</div>
-              <div className="text-sm font-medium text-black dark:text-white">
-                {category}
+      {categoriesWithScreenshots.length > 0 && (
+        <div className="mt-4">
+          <h3 className="text-lg font-bold mb-2 text-gray-500">
+            📁 Category Folders
+          </h3>
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
+            {categoriesWithScreenshots.map(([category, shots]) => (
+              <div
+                key={category}
+                className="border rounded-md p-4 bg-white dark:bg-gray-900 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 flex flex-col items-center justify-center"
+                onClick={() => handleFolderClick(category)}
+              >
+                <div className="text-2xl text-black dark:text-white">📁</div>
+                <div className="text-sm font-medium text-black dark:text-white">
+                  {category}
+                </div>
+                <div className="text-xs text-black dark:text-white">
+                  {shots.length} screenshots
+                </div>
               </div>
-              <div className="text-xs text-black dark:text-white">
-                {shots.length} screenshots
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {showModal && selectedCategory && (
         <div
