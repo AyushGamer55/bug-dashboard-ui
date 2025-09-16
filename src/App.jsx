@@ -135,6 +135,7 @@ function App() {
       />
     </Routes>
     <SpeedInsights />
+    </>
   );
 }
 
