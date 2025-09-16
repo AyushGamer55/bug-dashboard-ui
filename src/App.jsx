@@ -6,7 +6,6 @@ import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
-import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // 🔹 PrivateRoute wrapper
 function PrivateRoute({ children }) {
@@ -134,8 +133,6 @@ function App() {
         }
       />
     </Routes>
-    <SpeedInsights />
-    </>
   );
 }
 
