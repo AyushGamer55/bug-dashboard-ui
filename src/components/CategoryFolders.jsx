@@ -95,7 +95,15 @@ function CategoryFolders({ screenshots, fetchedScreenshots }) {
               <div
                 key={category}
                 className="border rounded-md p-4 bg-white dark:bg-gray-900 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 flex flex-col items-center justify-center"
+                tabIndex={0}
+                role="button"
                 onClick={() => handleFolderClick(category)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleFolderClick(category);
+                  }
+                }}
               >
                 <div className="text-2xl text-black dark:text-white">📁</div>
                 <div className="text-sm font-medium text-black dark:text-white">
@@ -151,9 +159,18 @@ function CategoryFolders({ screenshots, fetchedScreenshots }) {
                         ? "h-full object-contain"
                         : "h-32 object-contain"
                     }`}
+                    tabIndex={0}
+                    role="button"
                     onClick={() => {
                       setPreviewUrl(screenshot.url);
                       setIsPreviewFullscreen(true);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setPreviewUrl(screenshot.url);
+                        setIsPreviewFullscreen(true);
+                      }
                     }}
                     style={{ cursor: "pointer" }}
                   />
