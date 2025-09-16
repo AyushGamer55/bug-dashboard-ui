@@ -346,7 +346,15 @@ function ScreenshotSection({
               src={screenshot.url}
               alt={screenshot.title}
               className="w-full h-32 object-contain"
+              tabIndex={0}
+              role="button"
               onClick={() => setPreviewUrl(screenshot.url)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setPreviewUrl(screenshot.url);
+                }
+              }}
               onError={() =>
                 toast.error("Cannot load image. Please check the URL.")
               }
